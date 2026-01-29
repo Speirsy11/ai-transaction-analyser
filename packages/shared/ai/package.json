@@ -1,0 +1,22 @@
+{
+  "name": "@finance/ai",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "ai": "^4.0.30",
+    "@ai-sdk/openai": "^1.0.14",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@finance/config": "workspace:*",
+    "typescript": "^5.7.2"
+  }
+}

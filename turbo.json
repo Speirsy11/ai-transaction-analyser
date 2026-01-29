@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true
+    }
+  },
+  "boundaries": {
+    "tags": {
+      "type:feature": {
+        "dependencies": {
+          "deny": ["type:feature", "type:composition"]
+        }
+      },
+      "type:shared": {
+        "dependencies": {
+          "deny": ["type:feature", "type:composition"]
+        }
+      }
+    }
+  }
+}

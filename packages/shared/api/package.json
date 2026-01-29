@@ -1,0 +1,30 @@
+{
+  "name": "@finance/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@trpc/server": "^11.0.0-rc.663",
+    "@trpc/client": "^11.0.0-rc.663",
+    "@trpc/react-query": "^11.0.0-rc.663",
+    "@tanstack/react-query": "^5.62.8",
+    "superjson": "^2.2.2",
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@finance/config": "workspace:*",
+    "@types/react": "^19.0.2",
+    "typescript": "^5.7.2"
+  }
+}
