@@ -123,7 +123,7 @@ export default function HomePage() {
               <FeatureCard
                 icon={Upload}
                 title="Easy Import"
-                description="Import transactions from any major bank via CSV. Chase, Bank of America, Wells Fargo, and more."
+                description="Import transactions from any major UK bank via CSV. Monzo, Starling, Revolut, Barclays, and more."
               />
               <FeatureCard
                 icon={TrendingUp}
@@ -214,7 +214,7 @@ export default function HomePage() {
               />
               <FAQItem
                 question="Which banks are supported?"
-                answer="We support CSV exports from all major US banks including Chase, Bank of America, Wells Fargo, Capital One, Citi, and more. Any bank that exports CSV files will work."
+                answer="We support CSV exports from all major UK banks including Monzo, Starling, Revolut, Barclays, HSBC, NatWest, Lloyds, Santander, Halifax, Nationwide, and more. Any bank that exports CSV files will work."
               />
               <FAQItem
                 question="How accurate is the AI categorization?"
@@ -359,7 +359,7 @@ function PricingCard({
       <p className="text-muted-foreground mt-2 text-sm">{plan.description}</p>
       <div className="mt-4">
         <span className="text-4xl font-bold">
-          ${plan.price === 0 ? "0" : plan.price.toFixed(2)}
+          £{plan.price === 0 ? "0" : plan.price.toFixed(2)}
         </span>
         {plan.price > 0 && (
           <span className="text-muted-foreground">/month</span>

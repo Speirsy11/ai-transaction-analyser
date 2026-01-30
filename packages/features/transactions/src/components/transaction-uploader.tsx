@@ -160,8 +160,8 @@ export function TransactionUploader({
               Drag and drop your CSV file here
             </p>
             <p className="text-muted-foreground mb-4 text-sm">
-              Supports most bank export formats (Chase, Bank of America, Wells
-              Fargo, Capital One)
+              Supports most UK bank export formats (Monzo, Starling, Revolut,
+              Barclays, HSBC, NatWest, Lloyds, and more)
             </p>
             <label>
               <input
@@ -232,7 +232,7 @@ export function TransactionUploader({
                             t.amount < 0 ? "text-red-600" : "text-green-600"
                           )}
                         >
-                          ${Math.abs(t.amount).toFixed(2)}
+                          £{Math.abs(t.amount).toFixed(2)}
                         </td>
                       </tr>
                     ))}

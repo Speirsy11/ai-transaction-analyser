@@ -41,7 +41,7 @@ export default function BudgetPage() {
   const budget = budgetQuery.data;
   const categories = categoryQuery.data || [];
 
-  const monthName = new Date(year, month - 1).toLocaleDateString("en-US", {
+  const monthName = new Date(year, month - 1).toLocaleDateString("en-GB", {
     month: "long",
     year: "numeric",
   });
@@ -134,7 +134,7 @@ export default function BudgetPage() {
             >
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-2">
-                  <Label htmlFor="income">Monthly Income ($)</Label>
+                  <Label htmlFor="income">Monthly Income (£)</Label>
                   <Input
                     id="income"
                     name="income"

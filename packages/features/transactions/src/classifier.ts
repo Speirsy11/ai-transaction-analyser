@@ -65,7 +65,7 @@ export async function classifyTransaction(
 ): Promise<ClassificationResult> {
   const prompt = `${CLASSIFICATION_PROMPT}
 Description: ${transaction.description}
-Amount: $${Math.abs(transaction.amount).toFixed(2)} ${transaction.amount < 0 ? "(expense)" : "(income/credit)"}
+Amount: £${Math.abs(transaction.amount).toFixed(2)} ${transaction.amount < 0 ? "(expense)" : "(income/credit)"}
 ${transaction.merchant ? `Merchant: ${transaction.merchant}` : ""}
 ${transaction.date ? `Date: ${transaction.date.toISOString().split("T")[0]}` : ""}
 
@@ -93,7 +93,7 @@ export async function classifyTransactionsBatch(
   const transactionList = transactions
     .map(
       (t, i) =>
-        `${i}. Description: "${t.description}", Amount: $${Math.abs(t.amount).toFixed(2)} ${t.amount < 0 ? "(expense)" : "(income)"}`
+        `${i}. Description: "${t.description}", Amount: £${Math.abs(t.amount).toFixed(2)} ${t.amount < 0 ? "(expense)" : "(income)"}`
     )
     .join("\n");
 

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description:
       "Take control of your finances with AI-powered transaction categorization and smart budgeting.",
     type: "website",
-    locale: "en_US",
+    locale: "en_GB",
   },
   twitter: {
     card: "summary_large_image",

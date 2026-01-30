@@ -77,11 +77,11 @@ export default function ImportPage() {
           </CardHeader>
           <CardContent className="text-muted-foreground text-sm">
             <ul className="space-y-1">
-              <li>Chase Bank CSV</li>
-              <li>Bank of America CSV</li>
-              <li>Wells Fargo CSV</li>
-              <li>Capital One CSV</li>
-              <li>Generic CSV (date, description, amount)</li>
+              <li>Monzo CSV</li>
+              <li>Starling Bank CSV</li>
+              <li>Revolut CSV</li>
+              <li>Barclays CSV</li>
+              <li>HSBC, NatWest, Lloyds, and more</li>
             </ul>
           </CardContent>
         </Card>
@@ -130,40 +130,39 @@ export default function ImportPage() {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h4 className="mb-2 font-semibold">Chase</h4>
+              <h4 className="mb-2 font-semibold">Monzo</h4>
               <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
-                <li>Log in to chase.com</li>
-                <li>
-                  Go to your account and select &quot;See statements and
-                  activity&quot;
-                </li>
-                <li>
-                  Click &quot;Download activity&quot; and select CSV format
-                </li>
-                <li>Choose your date range and download</li>
+                <li>Open the Monzo app and go to your account</li>
+                <li>Scroll down and tap &quot;Export transactions&quot;</li>
+                <li>Select your date range</li>
+                <li>Choose &quot;Export as CSV&quot; and save the file</li>
               </ol>
             </div>
             <div>
-              <h4 className="mb-2 font-semibold">Bank of America</h4>
+              <h4 className="mb-2 font-semibold">Starling Bank</h4>
               <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
-                <li>Log in to bankofamerica.com</li>
-                <li>Go to your account and click &quot;Download&quot;</li>
-                <li>
-                  Select &quot;Microsoft Excel&quot; or &quot;CSV&quot; format
-                </li>
-                <li>Choose your date range and download</li>
+                <li>Log in to your Starling account online or via the app</li>
+                <li>Go to &quot;Statements&quot; in the menu</li>
+                <li>Select your date range and choose CSV format</li>
+                <li>Download the statement</li>
               </ol>
             </div>
             <div>
-              <h4 className="mb-2 font-semibold">Wells Fargo</h4>
+              <h4 className="mb-2 font-semibold">Barclays</h4>
               <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
-                <li>Log in to wellsfargo.com</li>
-                <li>
-                  Go to your account and select &quot;Download Account
-                  Activity&quot;
-                </li>
-                <li>Choose CSV format and your date range</li>
-                <li>Click &quot;Download&quot;</li>
+                <li>Log in to Barclays Online Banking</li>
+                <li>Go to your account and click &quot;Export&quot;</li>
+                <li>Select CSV format and your date range</li>
+                <li>Download the file</li>
+              </ol>
+            </div>
+            <div>
+              <h4 className="mb-2 font-semibold">Revolut</h4>
+              <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
+                <li>Open the Revolut app or log in online</li>
+                <li>Go to your account and tap &quot;Statements&quot;</li>
+                <li>Select the date range and choose CSV format</li>
+                <li>Generate and download the statement</li>
               </ol>
             </div>
           </div>

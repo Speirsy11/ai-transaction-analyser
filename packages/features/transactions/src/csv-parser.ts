@@ -26,37 +26,69 @@ interface CSVFormat {
 }
 
 const KNOWN_FORMATS: CSVFormat[] = [
+  // UK Banks (primary - Monzo first)
+  {
+    name: "Monzo",
+    dateColumn: "Date",
+    descriptionColumn: "Description",
+    amountColumn: "Amount",
+    merchantColumn: "Name",
+  },
+  {
+    name: "Starling",
+    dateColumn: "Date",
+    descriptionColumn: "Reference",
+    amountColumn: "Amount",
+  },
+  {
+    name: "Revolut",
+    dateColumn: "Started Date",
+    descriptionColumn: "Description",
+    amountColumn: "Amount",
+  },
+  {
+    name: "Barclays",
+    dateColumn: "Date",
+    descriptionColumn: "Memo",
+    amountColumn: "Amount",
+  },
+  {
+    name: "NatWest",
+    dateColumn: "Date",
+    descriptionColumn: "Description",
+    amountColumn: "Value",
+  },
+  {
+    name: "Lloyds",
+    dateColumn: "Transaction Date",
+    descriptionColumn: "Transaction Description",
+    amountColumn: "Debit Amount",
+  },
+  {
+    name: "Santander UK",
+    dateColumn: "Date",
+    descriptionColumn: "Description",
+    amountColumn: "Amount",
+  },
+  {
+    name: "Halifax",
+    dateColumn: "Date",
+    descriptionColumn: "Transaction Description",
+    amountColumn: "Debit Amount",
+  },
+  {
+    name: "Nationwide",
+    dateColumn: "Date",
+    descriptionColumn: "Description",
+    amountColumn: "Paid out",
+  },
+  // Generic format (fallback - must be last)
   {
     name: "Generic",
     dateColumn: "date",
     descriptionColumn: "description",
     amountColumn: "amount",
     merchantColumn: "merchant",
-  },
-  {
-    name: "Chase",
-    dateColumn: "Transaction Date",
-    descriptionColumn: "Description",
-    amountColumn: "Amount",
-  },
-  {
-    name: "Bank of America",
-    dateColumn: "Date",
-    descriptionColumn: "Description",
-    amountColumn: "Amount",
-  },
-  {
-    name: "Wells Fargo",
-    dateColumn: "Date",
-    descriptionColumn: "Description",
-    amountColumn: "Amount",
-  },
-  {
-    name: "Capital One",
-    dateColumn: "Transaction Date",
-    descriptionColumn: "Description",
-    amountColumn: "Transaction Amount",
-    merchantColumn: "Merchant",
   },
 ];
 
@@ -154,8 +186,8 @@ function parseDate(dateStr: string): Date | null {
 }
 
 function parseAmount(amountStr: string): number | null {
-  // Remove currency symbols and commas
-  const cleaned = amountStr.replace(/[$,]/g, "").trim();
+  // Remove currency symbols and commas (supports £, $, and €)
+  const cleaned = amountStr.replace(/[£$€,]/g, "").trim();
 
   // Handle parentheses for negative numbers
   if (cleaned.startsWith("(") && cleaned.endsWith(")")) {
