@@ -3,12 +3,14 @@ import { users } from "./schema/users";
 import { transactions } from "./schema/transactions";
 import { categories } from "./schema/categories";
 import { budgets, budgetAllocations } from "./schema/budgets";
+import { subscriptions } from "./schema/subscriptions";
 
 export const usersRelations = relations(users, ({ many }) => ({
   transactions: many(transactions),
   categories: many(categories),
   budgets: many(budgets),
   budgetAllocations: many(budgetAllocations),
+  subscriptions: many(subscriptions),
 }));
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -51,3 +53,10 @@ export const budgetAllocationsRelations = relations(
     }),
   })
 );
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  user: one(users, {
+    fields: [subscriptions.userId],
+    references: [users.id],
+  }),
+}));

@@ -11,6 +11,15 @@ catalog:
   # Authentication
   "@clerk/nextjs": "^6.9.6"
 
+  # Payments
+  stripe: "^17.5.0"
+  "@stripe/stripe-js": "^5.5.0"
+
+  # Email
+  resend: "^4.0.1"
+  "@react-email/components": "^0.0.31"
+  react-email: "^3.0.4"
+
   # Database
   drizzle-orm: "^0.38.3"
   postgres: "^3.4.5"
@@ -74,6 +83,7 @@ catalog:
   "@testing-library/jest-dom": "^6.6.3"
   "@vitejs/plugin-react": "^4.3.4"
   jsdom: "^25.0.1"
+  "@playwright/test": "^1.49.1"
 
   # Dev Dependencies
   "@eslint/js": "^9.17.0"
