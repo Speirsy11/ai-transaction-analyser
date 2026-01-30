@@ -179,16 +179,13 @@ export const analyticsRouter = router({
         const date = new Date(t.date);
         const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
-        if (!monthlyData.has(key)) {
-          monthlyData.set(key, { income: 0, expenses: 0 });
-        }
-
-        const data = monthlyData.get(key)!;
+        const existing = monthlyData.get(key) ?? { income: 0, expenses: 0 };
         if (t.amount > 0) {
-          data.income += t.amount;
+          existing.income += t.amount;
         } else {
-          data.expenses += Math.abs(t.amount);
+          existing.expenses += Math.abs(t.amount);
         }
+        monthlyData.set(key, existing);
       }
 
       return Array.from(monthlyData.entries())

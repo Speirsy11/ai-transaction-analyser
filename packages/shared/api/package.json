@@ -16,19 +16,19 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "dependencies": {
-    "@trpc/server": "^11.0.0-rc.663",
-    "@trpc/client": "^11.0.0-rc.663",
-    "@trpc/react-query": "^11.0.0-rc.663",
-    "@tanstack/react-query": "^5.62.8",
-    "superjson": "^2.2.2",
-    "zod": "^3.24.1"
+    "@trpc/server": "catalog:",
+    "@trpc/client": "catalog:",
+    "@trpc/react-query": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "catalog:"
   },
   "devDependencies": {
     "@finance/config": "workspace:*",
-    "@types/react": "^19.0.2",
-    "typescript": "^5.7.2"
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
   }
 }

@@ -7,9 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Button,
   Tabs,
-  TabsContent,
   TabsList,
   TabsTrigger,
   Skeleton,
@@ -22,10 +20,8 @@ import {
   InsightCard,
 } from "@finance/analytics";
 import { trpc } from "@/trpc/client";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function AnalyticsPage() {
-  const now = new Date();
   const [months, setMonths] = useState(6);
 
   const endDate = new Date();
@@ -62,7 +58,8 @@ export default function AnalyticsPage() {
 
   const spendingChange =
     latestMonth && previousMonth
-      ? ((latestMonth.expenses - previousMonth.expenses) / previousMonth.expenses) *
+      ? ((latestMonth.expenses - previousMonth.expenses) /
+          previousMonth.expenses) *
         100
       : 0;
 
@@ -112,7 +109,7 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Analytics</h2>
           <p className="text-muted-foreground">
@@ -181,7 +178,9 @@ export default function AnalyticsPage() {
         ) : (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">No spending data available</p>
+              <p className="text-muted-foreground">
+                No spending data available
+              </p>
             </CardContent>
           </Card>
         )}
@@ -204,7 +203,9 @@ export default function AnalyticsPage() {
               <CardTitle>Spending by Category</CardTitle>
             </CardHeader>
             <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">No category data available</p>
+              <p className="text-muted-foreground">
+                No category data available
+              </p>
             </CardContent>
           </Card>
         )}
@@ -220,28 +221,28 @@ export default function AnalyticsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="p-4 rounded-lg bg-muted/50">
-              <p className="text-sm text-muted-foreground">Total Spent</p>
+            <div className="bg-muted/50 rounded-lg p-4">
+              <p className="text-muted-foreground text-sm">Total Spent</p>
               <p className="text-2xl font-bold">{formatCurrency(totalSpent)}</p>
             </div>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <p className="text-sm text-muted-foreground">
+            <div className="bg-muted/50 rounded-lg p-4">
+              <p className="text-muted-foreground text-sm">
                 Avg. Monthly Expenses
               </p>
               <p className="text-2xl font-bold">
                 {formatCurrency(avgMonthlySpend)}
               </p>
             </div>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <p className="text-sm text-muted-foreground">Total Income</p>
+            <div className="bg-muted/50 rounded-lg p-4">
+              <p className="text-muted-foreground text-sm">Total Income</p>
               <p className="text-2xl font-bold text-green-600">
                 {formatCurrency(
                   monthlyData.reduce((sum, m) => sum + m.income, 0)
                 )}
               </p>
             </div>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <p className="text-sm text-muted-foreground">Net Savings</p>
+            <div className="bg-muted/50 rounded-lg p-4">
+              <p className="text-muted-foreground text-sm">Net Savings</p>
               <p
                 className={`text-2xl font-bold ${
                   monthlyData.reduce((sum, m) => sum + m.savings, 0) >= 0

@@ -11,15 +11,31 @@ import {
   Progress,
   cn,
 } from "@finance/ui";
-import { Upload, FileText, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
-import { parseCSV, type CSVParseResult, type ParsedTransaction } from "../csv-parser";
+import {
+  Upload,
+  FileText,
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
+import {
+  parseCSV,
+  type CSVParseResult,
+  type ParsedTransaction,
+} from "../csv-parser";
 
 interface TransactionUploaderProps {
   onUpload: (transactions: ParsedTransaction[]) => Promise<void>;
   className?: string;
 }
 
-type UploadState = "idle" | "parsing" | "preview" | "uploading" | "success" | "error";
+type UploadState =
+  | "idle"
+  | "parsing"
+  | "preview"
+  | "uploading"
+  | "success"
+  | "error";
 
 export function TransactionUploader({
   onUpload,
@@ -52,7 +68,7 @@ export function TransactionUploader({
       } else {
         setState("preview");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to parse CSV file");
       setState("error");
     }
@@ -98,7 +114,7 @@ export function TransactionUploader({
       clearInterval(progressInterval);
       setUploadProgress(100);
       setState("success");
-    } catch (err) {
+    } catch {
       setError("Failed to upload transactions");
       setState("error");
     }
@@ -119,15 +135,15 @@ export function TransactionUploader({
           Import Transactions
         </CardTitle>
         <CardDescription>
-          Upload a CSV file from your bank to automatically import and categorize
-          transactions
+          Upload a CSV file from your bank to automatically import and
+          categorize transactions
         </CardDescription>
       </CardHeader>
       <CardContent>
         {state === "idle" && (
           <div
             className={cn(
-              "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
+              "rounded-lg border-2 border-dashed p-8 text-center transition-colors",
               dragActive
                 ? "border-primary bg-primary/5"
                 : "border-muted-foreground/25 hover:border-muted-foreground/50"
@@ -139,11 +155,11 @@ export function TransactionUploader({
             onDragLeave={() => setDragActive(false)}
             onDrop={handleDrop}
           >
-            <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <p className="text-lg font-medium mb-2">
+            <FileText className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+            <p className="mb-2 text-lg font-medium">
               Drag and drop your CSV file here
             </p>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-muted-foreground mb-4 text-sm">
               Supports most bank export formats (Chase, Bank of America, Wells
               Fargo, Capital One)
             </p>
@@ -162,8 +178,8 @@ export function TransactionUploader({
         )}
 
         {state === "parsing" && (
-          <div className="text-center py-8">
-            <Loader2 className="h-12 w-12 mx-auto text-primary animate-spin mb-4" />
+          <div className="py-8 text-center">
+            <Loader2 className="text-primary mx-auto mb-4 h-12 w-12 animate-spin" />
             <p className="text-lg font-medium">Parsing CSV file...</p>
           </div>
         )}
@@ -178,11 +194,11 @@ export function TransactionUploader({
             </div>
 
             {parseResult.errors.length > 0 && (
-              <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-1">
+              <div className="rounded-lg bg-yellow-50 p-3 dark:bg-yellow-900/20">
+                <p className="mb-1 text-sm font-medium text-yellow-800 dark:text-yellow-200">
                   {parseResult.errors.length} rows had issues:
                 </p>
-                <ul className="text-xs text-yellow-700 dark:text-yellow-300 space-y-1">
+                <ul className="space-y-1 text-xs text-yellow-700 dark:text-yellow-300">
                   {parseResult.errors.slice(0, 3).map((err, i) => (
                     <li key={i}>{err}</li>
                   ))}
@@ -193,7 +209,7 @@ export function TransactionUploader({
               </div>
             )}
 
-            <div className="border rounded-lg overflow-hidden">
+            <div className="overflow-hidden rounded-lg border">
               <div className="max-h-48 overflow-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-muted sticky top-0">
@@ -206,10 +222,8 @@ export function TransactionUploader({
                   <tbody>
                     {parseResult.data.slice(0, 5).map((t, i) => (
                       <tr key={i} className="border-t">
-                        <td className="p-2">
-                          {t.date.toLocaleDateString()}
-                        </td>
-                        <td className="p-2 truncate max-w-[200px]">
+                        <td className="p-2">{t.date.toLocaleDateString()}</td>
+                        <td className="max-w-[200px] truncate p-2">
                           {t.description}
                         </td>
                         <td
@@ -226,7 +240,7 @@ export function TransactionUploader({
                 </table>
               </div>
               {parseResult.data.length > 5 && (
-                <div className="p-2 bg-muted text-center text-sm text-muted-foreground">
+                <div className="bg-muted text-muted-foreground p-2 text-center text-sm">
                   ...and {parseResult.data.length - 5} more transactions
                 </div>
               )}
@@ -246,9 +260,9 @@ export function TransactionUploader({
         {state === "uploading" && (
           <div className="space-y-4 py-4">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 mx-auto text-primary animate-spin mb-2" />
+              <Loader2 className="text-primary mx-auto mb-2 h-8 w-8 animate-spin" />
               <p className="font-medium">Importing transactions...</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 AI is categorizing your transactions
               </p>
             </div>
@@ -257,10 +271,10 @@ export function TransactionUploader({
         )}
 
         {state === "success" && (
-          <div className="text-center py-8">
-            <CheckCircle2 className="h-12 w-12 mx-auto text-green-500 mb-4" />
-            <p className="text-lg font-medium mb-2">Import Complete!</p>
-            <p className="text-sm text-muted-foreground mb-4">
+          <div className="py-8 text-center">
+            <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-green-500" />
+            <p className="mb-2 text-lg font-medium">Import Complete!</p>
+            <p className="text-muted-foreground mb-4 text-sm">
               {parseResult?.data.length} transactions have been imported and
               categorized
             </p>
@@ -269,10 +283,10 @@ export function TransactionUploader({
         )}
 
         {state === "error" && (
-          <div className="text-center py-8">
-            <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
-            <p className="text-lg font-medium mb-2">Import Failed</p>
-            <p className="text-sm text-muted-foreground mb-4">{error}</p>
+          <div className="py-8 text-center">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
+            <p className="mb-2 text-lg font-medium">Import Failed</p>
+            <p className="text-muted-foreground mb-4 text-sm">{error}</p>
             <Button onClick={reset}>Try Again</Button>
           </div>
         )}

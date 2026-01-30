@@ -20,7 +20,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="max-w-3xl space-y-6">
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
@@ -40,7 +40,7 @@ export default function SettingsPage() {
             <UserButton />
             <div>
               <p className="font-medium">{user?.fullName || "User"}</p>
-              <p className="text-sm text-muted-foreground">{user?.email}</p>
+              <p className="text-muted-foreground text-sm">{user?.email}</p>
             </div>
           </div>
           <Separator />
@@ -62,7 +62,7 @@ export default function SettingsPage() {
               />
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Profile information is managed through your authentication provider.
             Click on your avatar to update.
           </p>
@@ -79,20 +79,22 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Dark Mode</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Toggle between light and dark themes
               </p>
             </div>
             <Switch
               checked={theme === "dark"}
-              onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+              onCheckedChange={(checked) =>
+                setTheme(checked ? "dark" : "light")
+              }
             />
           </div>
           <Separator />
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>System Theme</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Automatically match your system preference
               </p>
             </div>
@@ -116,8 +118,8 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Budget Alerts</Label>
-              <p className="text-sm text-muted-foreground">
-                Get notified when you're approaching budget limits
+              <p className="text-muted-foreground text-sm">
+                Get notified when you&apos;re approaching budget limits
               </p>
             </div>
             <Switch defaultChecked />
@@ -126,7 +128,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Weekly Summary</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Receive a weekly email with your spending summary
               </p>
             </div>
@@ -136,7 +138,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Large Transaction Alerts</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Get notified for transactions over a certain amount
               </p>
             </div>
@@ -155,7 +157,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <p className="font-medium">Export Data</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Download all your transactions and settings as a JSON file
               </p>
             </div>
@@ -164,8 +166,8 @@ export default function SettingsPage() {
           <Separator />
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <p className="font-medium text-destructive">Delete Account</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-destructive font-medium">Delete Account</p>
+              <p className="text-muted-foreground text-sm">
                 Permanently delete your account and all associated data
               </p>
             </div>

@@ -37,6 +37,7 @@ packages/shared/                # Shared (can import shared only)
 ```
 
 **Import Rules (enforced by Turborepo):**
+
 - Compositions → can import Features + Shared
 - Features → can only import Shared
 - Shared → can only import Shared
@@ -79,6 +80,7 @@ git commit -m "feat/fix/refactor: description of changes"
 ```
 
 **Commit message prefixes:**
+
 - `feat:` New feature
 - `fix:` Bug fix
 - `refactor:` Code refactoring
@@ -88,6 +90,7 @@ git commit -m "feat/fix/refactor: description of changes"
 - `chore:` Maintenance tasks
 
 **Commit after:**
+
 - Completing a logical unit of work
 - Before switching to a different task
 - After fixing lint/type errors
@@ -100,6 +103,13 @@ git commit -m "feat/fix/refactor: description of changes"
 3. **React:** Use Server Components by default, `"use client"` only when needed
 4. **Imports:** Respect boundary rules - features cannot import other features
 5. **Testing:** Write tests for business logic (calculations, parsers)
+6. **Dependencies:** Always use pnpm workspace catalog (see below)
+
+### Adding Dependencies
+
+**ALWAYS use the pnpm workspace catalog for dependency versions.**
+
+All external dependencies must be defined in `pnpm-workspace.yaml` under the `catalog:` section. Package.json files should reference `catalog:` instead of version numbers.
 
 ### Key Files & Locations
 
@@ -148,6 +158,7 @@ pnpm clean                  # Clean all build artifacts
 ## Current Progress
 
 ### Completed
+
 - [x] Turborepo monorepo setup with boundaries
 - [x] Shared packages: ui, db, api, ai, config
 - [x] Feature packages: auth, transactions, analytics
@@ -158,6 +169,7 @@ pnpm clean                  # Clean all build artifacts
 - [x] ESLint & Prettier configuration
 
 ### TODO
+
 - [ ] Set up PostgreSQL database and run migrations
 - [ ] Add Vitest for unit testing
 - [ ] Implement Stripe payments

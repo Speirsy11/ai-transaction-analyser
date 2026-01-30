@@ -1,6 +1,14 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, Progress, cn, formatCurrency, formatPercent } from "@finance/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  cn,
+  formatCurrency,
+  formatPercent,
+} from "@finance/ui";
 import type { BudgetBreakdown } from "../calculations";
 
 interface BudgetGaugeProps {
@@ -38,7 +46,7 @@ export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>50/30/20 Budget</span>
-          <span className="text-sm font-normal text-muted-foreground">
+          <span className="text-muted-foreground text-sm font-normal">
             Savings Rate: {formatPercent(breakdown.savingsRate)}
           </span>
         </CardTitle>
@@ -56,7 +64,7 @@ export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">{category.name}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {category.description}
                   </p>
                 </div>
@@ -69,15 +77,20 @@ export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
                   >
                     {formatCurrency(category.data.actual)}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     of {formatCurrency(category.data.target)}
                   </p>
                 </div>
               </div>
-              <div className={cn("h-3 rounded-full overflow-hidden", category.bgColor)}>
+              <div
+                className={cn(
+                  "h-3 overflow-hidden rounded-full",
+                  category.bgColor
+                )}
+              >
                 <div
                   className={cn(
-                    "h-full transition-all duration-500 rounded-full",
+                    "h-full rounded-full transition-all duration-500",
                     isOver ? "bg-red-500" : category.color
                   )}
                   style={{ width: `${progressPercent}%` }}
@@ -108,19 +121,19 @@ export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
           );
         })}
 
-        <div className="pt-4 border-t">
+        <div className="border-t pt-4">
           <div className="grid grid-cols-2 gap-4 text-center">
             <div>
               <p className="text-2xl font-bold text-green-500">
                 {formatCurrency(breakdown.totalIncome)}
               </p>
-              <p className="text-sm text-muted-foreground">Total Income</p>
+              <p className="text-muted-foreground text-sm">Total Income</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-red-500">
                 {formatCurrency(breakdown.totalExpenses)}
               </p>
-              <p className="text-sm text-muted-foreground">Total Expenses</p>
+              <p className="text-muted-foreground text-sm">Total Expenses</p>
             </div>
           </div>
         </div>

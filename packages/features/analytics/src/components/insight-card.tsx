@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  cn,
-} from "@finance/ui";
+import { Card, CardContent, cn } from "@finance/ui";
 import {
   TrendingUp,
   TrendingDown,
@@ -67,6 +63,8 @@ export function InsightCard({
   value,
   className,
 }: InsightCardProps) {
+  // Type is constrained to InsightType union, safe to access
+  // eslint-disable-next-line security/detect-object-injection
   const config = typeConfig[type];
   const Icon = config.icon;
 
@@ -74,19 +72,29 @@ export function InsightCard({
     <Card className={cn("overflow-hidden", className)}>
       <CardContent className={cn("p-4", config.bgColor)}>
         <div className="flex items-start gap-4">
-          <div className={cn("p-2 rounded-full bg-background/80", config.iconColor)}>
+          <div
+            className={cn(
+              "bg-background/80 rounded-full p-2",
+              config.iconColor
+            )}
+          >
             <Icon className="h-5 w-5" />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <p className={cn("font-semibold", config.textColor)}>{title}</p>
               {value && (
-                <span className={cn("text-lg font-bold whitespace-nowrap", config.textColor)}>
+                <span
+                  className={cn(
+                    "whitespace-nowrap text-lg font-bold",
+                    config.textColor
+                  )}
+                >
                   {value}
                 </span>
               )}
             </div>
-            <p className={cn("text-sm mt-1 opacity-90", config.textColor)}>
+            <p className={cn("mt-1 text-sm opacity-90", config.textColor)}>
               {description}
             </p>
           </div>

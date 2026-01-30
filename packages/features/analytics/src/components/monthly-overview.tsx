@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  cn,
-} from "@finance/ui";
+import { Card, CardContent, CardHeader, CardTitle, cn } from "@finance/ui";
 import {
   BarChart,
   Bar,
@@ -80,14 +74,17 @@ export function MonthlyOverview({ data, className }: MonthlyOverviewProps) {
                 content={({ active, payload, label }) => {
                   if (active && payload?.length) {
                     const [year, monthNum] = label.split("-");
-                    const date = new Date(parseInt(year), parseInt(monthNum) - 1);
+                    const date = new Date(
+                      parseInt(year),
+                      parseInt(monthNum) - 1
+                    );
                     const monthName = date.toLocaleDateString("en-US", {
                       month: "long",
                       year: "numeric",
                     });
                     return (
-                      <div className="rounded-lg border bg-background p-4 shadow-lg">
-                        <p className="font-medium mb-2">{monthName}</p>
+                      <div className="bg-background rounded-lg border p-4 shadow-lg">
+                        <p className="mb-2 font-medium">{monthName}</p>
                         {payload.map((entry, index) => (
                           <div
                             key={index}
@@ -95,7 +92,7 @@ export function MonthlyOverview({ data, className }: MonthlyOverviewProps) {
                           >
                             <div className="flex items-center gap-2">
                               <div
-                                className="w-3 h-3 rounded-full"
+                                className="h-3 w-3 rounded-full"
                                 style={{ backgroundColor: entry.color }}
                               />
                               <span className="text-sm capitalize">

@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { QueryClient, QueryClientProvider, httpBatchLink } from "@finance/api/client";
+import {
+  QueryClient,
+  QueryClientProvider,
+  httpBatchLink,
+} from "@finance/api/client";
 import { trpc } from "./client";
 import superjson from "superjson";
 

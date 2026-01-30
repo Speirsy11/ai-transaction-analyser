@@ -4,9 +4,6 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
   Input,
   Button,
   Select,
@@ -17,11 +14,11 @@ import {
 } from "@finance/ui";
 import { TransactionTable } from "@finance/transactions";
 import { trpc } from "@/trpc/client";
-import { Search, Filter, Download, Plus } from "lucide-react";
+import { Search, Download, Plus } from "lucide-react";
 
 export default function TransactionsPage() {
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(25);
+  const [limit] = useState(25);
   const [offset, setOffset] = useState(0);
 
   const transactionsQuery = trpc.transactions.list.useQuery({
@@ -57,7 +54,7 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Transactions</h2>
           <p className="text-muted-foreground">
@@ -66,11 +63,11 @@ export default function TransactionsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
           <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             Add Transaction
           </Button>
         </div>
@@ -79,9 +76,9 @@ export default function TransactionsPage() {
       {/* Filters */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
               <Input
                 placeholder="Search transactions..."
                 value={search}
@@ -130,20 +127,23 @@ export default function TransactionsPage() {
         isLoading={transactionsQuery.isLoading}
         onClassify={(id) => classifyMutation.mutate({ id })}
         onDelete={(id) => {
-          if (confirm("Are you sure you want to delete this transaction?")) {
+          // eslint-disable-next-line no-alert -- Simple confirmation dialog for delete action
+          const shouldDelete = window.confirm(
+            "Are you sure you want to delete this transaction?"
+          );
+          if (shouldDelete) {
             deleteMutation.mutate({ id });
           }
         }}
-        onEdit={(id) => {
+        onEdit={(_id) => {
           // TODO: Open edit modal
-          console.log("Edit", id);
         }}
       />
 
       {/* Pagination */}
       {total > 0 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Showing {offset + 1} to {Math.min(offset + limit, total)} of {total}{" "}
             transactions
           </p>

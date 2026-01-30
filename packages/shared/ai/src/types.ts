@@ -28,4 +28,6 @@ export const BatchClassificationResultSchema = z.object({
   ),
 });
 
-export type BatchClassificationResult = z.infer<typeof BatchClassificationResultSchema>;
+export type BatchClassificationResult = z.infer<
+  typeof BatchClassificationResultSchema
+>;

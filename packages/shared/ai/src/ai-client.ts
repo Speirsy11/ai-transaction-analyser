@@ -1,7 +1,11 @@
 import { generateText, generateObject, streamText as aiStreamText } from "ai";
 import { z } from "zod";
 import { getModel, type ModelId } from "./model-registry";
-import { ClassificationResultSchema, type TransactionInput, type ClassificationResult } from "./types";
+import {
+  ClassificationResultSchema,
+  type TransactionInput,
+  type ClassificationResult,
+} from "./types";
 
 export async function askAI(
   prompt: string,

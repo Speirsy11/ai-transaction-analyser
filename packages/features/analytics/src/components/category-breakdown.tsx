@@ -9,14 +9,7 @@ import {
   formatCurrency,
   formatPercent,
 } from "@finance/ui";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Legend,
-  Tooltip,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 interface CategoryData {
   category: string;
@@ -30,16 +23,16 @@ interface CategoryBreakdownProps {
 }
 
 const COLORS = [
-  "hsl(220, 70%, 50%)",  // blue
-  "hsl(280, 65%, 60%)",  // purple
-  "hsl(142, 76%, 36%)",  // green
-  "hsl(38, 92%, 50%)",   // orange
-  "hsl(340, 75%, 55%)",  // pink
-  "hsl(180, 60%, 45%)",  // teal
-  "hsl(45, 93%, 47%)",   // yellow
-  "hsl(0, 84%, 60%)",    // red
-  "hsl(200, 70%, 50%)",  // light blue
-  "hsl(320, 70%, 50%)",  // magenta
+  "hsl(220, 70%, 50%)", // blue
+  "hsl(280, 65%, 60%)", // purple
+  "hsl(142, 76%, 36%)", // green
+  "hsl(38, 92%, 50%)", // orange
+  "hsl(340, 75%, 55%)", // pink
+  "hsl(180, 60%, 45%)", // teal
+  "hsl(45, 93%, 47%)", // yellow
+  "hsl(0, 84%, 60%)", // red
+  "hsl(200, 70%, 50%)", // light blue
+  "hsl(320, 70%, 50%)", // magenta
 ];
 
 export function CategoryBreakdown({ data, className }: CategoryBreakdownProps) {
@@ -53,7 +46,13 @@ export function CategoryBreakdown({ data, className }: CategoryBreakdownProps) {
   const chartData = [
     ...topCategories,
     ...(otherTotal > 0
-      ? [{ category: "Other", total: otherTotal, percentage: (otherTotal / total) * 100 }]
+      ? [
+          {
+            category: "Other",
+            total: otherTotal,
+            percentage: (otherTotal / total) * 100,
+          },
+        ]
       : []),
   ];
 
@@ -63,7 +62,7 @@ export function CategoryBreakdown({ data, className }: CategoryBreakdownProps) {
         <CardTitle>Spending by Category</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col gap-6 lg:flex-row">
           <div className="h-[280px] w-full lg:w-1/2">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -90,12 +89,12 @@ export function CategoryBreakdown({ data, className }: CategoryBreakdownProps) {
                     if (active && payload?.[0]) {
                       const data = payload[0].payload;
                       return (
-                        <div className="rounded-lg border bg-background p-3 shadow-lg">
+                        <div className="bg-background rounded-lg border p-3 shadow-lg">
                           <p className="font-medium">{data.category}</p>
                           <p className="text-lg font-semibold">
                             {formatCurrency(data.total)}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {formatPercent(data.percentage)}
                           </p>
                         </div>
@@ -111,11 +110,11 @@ export function CategoryBreakdown({ data, className }: CategoryBreakdownProps) {
             {chartData.map((item, index) => (
               <div
                 key={item.category}
-                className="flex items-center justify-between py-2 border-b last:border-0"
+                className="flex items-center justify-between border-b py-2 last:border-0"
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   />
                   <span className="font-medium">{item.category}</span>
@@ -124,7 +123,7 @@ export function CategoryBreakdown({ data, className }: CategoryBreakdownProps) {
                   <p className="font-semibold tabular-nums">
                     {formatCurrency(item.total)}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {formatPercent(item.percentage)}
                   </p>
                 </div>

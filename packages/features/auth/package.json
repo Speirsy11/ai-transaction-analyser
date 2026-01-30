@@ -15,18 +15,19 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.9.6",
+    "@clerk/nextjs": "catalog:",
     "@finance/db": "workspace:*",
     "@finance/api": "workspace:*",
-    "zod": "^3.24.1"
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "next": "^15.0.0"
+    "react": "catalog:",
+    "next": "catalog:"
   },
   "devDependencies": {
     "@finance/config": "workspace:*",
-    "@types/react": "^19.0.2",
-    "typescript": "^5.7.2"
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
   }
 }

@@ -61,8 +61,16 @@ export function SpendingChart({
             >
               <defs>
                 <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                  <stop
+                    offset="5%"
+                    stopColor="hsl(var(--primary))"
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="hsl(var(--primary))"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -86,8 +94,8 @@ export function SpendingChart({
                 content={({ active, payload }) => {
                   if (active && payload?.[0]) {
                     return (
-                      <div className="rounded-lg border bg-background p-3 shadow-lg">
-                        <p className="text-sm text-muted-foreground">
+                      <div className="bg-background rounded-lg border p-3 shadow-lg">
+                        <p className="text-muted-foreground text-sm">
                           {formatDate(payload[0].payload.date)}
                         </p>
                         <p className="text-lg font-semibold">

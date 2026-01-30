@@ -2,7 +2,12 @@
 export { transactionSchema, type TransactionFormData } from "./schema";
 
 // Utils
-export { parseCSV, detectCSVFormat, type CSVParseResult } from "./csv-parser";
+export {
+  parseCSV,
+  detectCSVFormat,
+  type CSVParseResult,
+  type ParsedTransaction,
+} from "./csv-parser";
 export { classifyTransaction, classifyTransactionsBatch } from "./classifier";
 
 // Router

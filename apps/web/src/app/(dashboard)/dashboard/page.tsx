@@ -86,7 +86,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
+            <Wallet className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -96,7 +96,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-green-600">
                   {formatCurrency(budget?.totalIncome || 0)}
                 </div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-muted-foreground text-xs">This month</p>
               </>
             )}
           </CardContent>
@@ -104,8 +104,10 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-            <TrendingDown className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">
+              Total Expenses
+            </CardTitle>
+            <TrendingDown className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -115,7 +117,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-red-600">
                   {formatCurrency(budget?.totalExpenses || 0)}
                 </div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-muted-foreground text-xs">This month</p>
               </>
             )}
           </CardContent>
@@ -124,7 +126,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Net Cash Flow</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -133,7 +135,8 @@ export default function DashboardPage() {
               <>
                 <div
                   className={`text-2xl font-bold ${
-                    (budget?.totalIncome || 0) - (budget?.totalExpenses || 0) >= 0
+                    (budget?.totalIncome || 0) - (budget?.totalExpenses || 0) >=
+                    0
                       ? "text-green-600"
                       : "text-red-600"
                   }`}
@@ -142,7 +145,7 @@ export default function DashboardPage() {
                     (budget?.totalIncome || 0) - (budget?.totalExpenses || 0)
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-muted-foreground text-xs">This month</p>
               </>
             )}
           </CardContent>
@@ -151,7 +154,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
-            <PiggyBank className="h-4 w-4 text-muted-foreground" />
+            <PiggyBank className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -161,9 +164,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold">
                   {(budget?.savingsRate || 0).toFixed(1)}%
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Target: 20%
-                </p>
+                <p className="text-muted-foreground text-xs">Target: 20%</p>
               </>
             )}
           </CardContent>
@@ -230,7 +231,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/dashboard/transactions"
-            className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
+            className="text-primary flex items-center gap-1 text-sm font-medium hover:underline"
           >
             View All
             <ArrowRight className="h-4 w-4" />
@@ -256,7 +257,7 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8">
+            <div className="py-8 text-center">
               <p className="text-muted-foreground mb-4">
                 No transactions yet. Import your bank statement to get started.
               </p>

@@ -1,5 +1,5 @@
 import { router, protectedProcedure, z } from "@finance/api";
-import { db, transactions, categories } from "@finance/db";
+import { db, transactions } from "@finance/db";
 import { eq, and, gte, lte, desc, like, sql } from "drizzle-orm";
 import { transactionFilterSchema } from "./schema";
 import { classifyTransaction, classifyTransactionsBatch } from "./classifier";
@@ -138,16 +138,20 @@ export const transactionsRouter = router({
           }))
         );
 
-        transactionsToInsert = transactionsToInsert.map((t, i) => ({
-          ...t,
-          aiClassified: classifications[i]?.category,
-          necessityScore:
-            classifications[i]?.necessityType === "need"
-              ? 1
-              : classifications[i]?.necessityType === "savings"
-                ? 0.5
-                : 0,
-        }));
+        transactionsToInsert = transactionsToInsert.map((t, i) => {
+          // eslint-disable-next-line security/detect-object-injection -- Safe array index access within map callback
+          const classification = classifications[i];
+          return {
+            ...t,
+            aiClassified: classification?.category,
+            necessityScore:
+              classification?.necessityType === "need"
+                ? 1
+                : classification?.necessityType === "savings"
+                  ? 0.5
+                  : 0,
+          };
+        });
       }
 
       const inserted = await db
@@ -265,14 +269,14 @@ export const transactionsRouter = router({
         .filter((t) => t.amount < 0)
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-      const categoryTotals = userTransactions.reduce(
-        (acc, t) => {
-          const category = t.aiClassified || "Uncategorized";
-          acc[category] = (acc[category] || 0) + Math.abs(t.amount);
-          return acc;
-        },
-        {} as Record<string, number>
-      );
+      const categoryTotals: Record<string, number> = {};
+      for (const t of userTransactions) {
+        const category = t.aiClassified || "Uncategorized";
+        // eslint-disable-next-line security/detect-object-injection -- Safe: category is derived from user data in typed Record
+        const currentTotal = categoryTotals[category] || 0;
+        // eslint-disable-next-line security/detect-object-injection -- Safe: category is derived from user data in typed Record
+        categoryTotals[category] = currentTotal + Math.abs(t.amount);
+      }
 
       return {
         totalIncome,

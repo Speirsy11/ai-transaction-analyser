@@ -19,10 +19,11 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
 
+  // eslint-disable-next-line security/detect-object-injection -- Safe: pathname is from Next.js router, used as key in hardcoded Record
   const title = pageTitles[pathname] || "Dashboard";
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
+    <header className="bg-background sticky top-0 z-30 flex h-16 items-center gap-4 border-b px-6">
       {/* Mobile menu button */}
       <Button variant="ghost" size="icon" className="lg:hidden">
         <Menu className="h-5 w-5" />

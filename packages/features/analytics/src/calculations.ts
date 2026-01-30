@@ -95,9 +95,13 @@ export function calculate503020(
   }
 
   const totalExpenses = needsActual + wantsActual + savingsActual;
-  const savingsRate = income > 0 ? ((income - totalExpenses) / income) * 100 : 0;
+  const savingsRate =
+    income > 0 ? ((income - totalExpenses) / income) * 100 : 0;
 
-  const getStatus = (actual: number, target: number): "under" | "on-track" | "over" => {
+  const getStatus = (
+    actual: number,
+    target: number
+  ): "under" | "on-track" | "over" => {
     const ratio = actual / target;
     if (ratio < 0.9) return "under";
     if (ratio > 1.1) return "over";
@@ -186,11 +190,12 @@ export function calculateSpendingTrends(
       case "day":
         key = date.toISOString().split("T")[0];
         break;
-      case "week":
+      case "week": {
         const weekStart = new Date(date);
         weekStart.setDate(date.getDate() - date.getDay());
         key = weekStart.toISOString().split("T")[0];
         break;
+      }
       case "month":
         key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
         break;

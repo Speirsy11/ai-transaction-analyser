@@ -2,7 +2,7 @@ import { SignUp } from "@finance/auth";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30">
+    <div className="bg-muted/30 flex min-h-screen items-center justify-center">
       <SignUp
         appearance={{
           elements: {

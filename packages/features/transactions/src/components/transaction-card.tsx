@@ -20,38 +20,45 @@ interface TransactionCardProps {
   onClick?: () => void;
 }
 
-export function TransactionCard({ transaction, onClick }: TransactionCardProps) {
+export function TransactionCard({
+  transaction,
+  onClick,
+}: TransactionCardProps) {
   return (
     <Card
       className={cn(
-        "cursor-pointer transition-all hover:shadow-md hover:border-primary/20",
+        "hover:border-primary/20 cursor-pointer transition-all hover:shadow-md",
         onClick && "hover:bg-accent/50"
       )}
       onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <p className="font-medium truncate">{transaction.description}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-medium">{transaction.description}</p>
             {transaction.merchant && (
-              <p className="text-sm text-muted-foreground truncate">
+              <p className="text-muted-foreground truncate text-sm">
                 {transaction.merchant}
               </p>
             )}
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-xs text-muted-foreground">
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-muted-foreground text-xs">
                 {format(new Date(transaction.date), "MMM d, yyyy")}
               </span>
               <CategoryBadge
-                category={transaction.category?.name ?? transaction.aiClassified}
+                category={
+                  transaction.category?.name ?? transaction.aiClassified
+                }
                 necessityType={transaction.category?.necessityType}
-                isAiSuggested={!transaction.category && !!transaction.aiClassified}
+                isAiSuggested={
+                  !transaction.category && !!transaction.aiClassified
+                }
               />
             </div>
           </div>
           <div
             className={cn(
-              "text-lg font-semibold tabular-nums whitespace-nowrap",
+              "whitespace-nowrap text-lg font-semibold tabular-nums",
               transaction.amount < 0
                 ? "text-red-600 dark:text-red-400"
                 : "text-green-600 dark:text-green-400"

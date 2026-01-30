@@ -1,5 +1,4 @@
 import Papa from "papaparse";
-import { z } from "zod";
 
 export interface CSVParseResult {
   success: boolean;
@@ -62,7 +61,10 @@ const KNOWN_FORMATS: CSVFormat[] = [
 ];
 
 function normalizeColumnName(name: string): string {
-  return name.toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]/g, "");
 }
 
 export function detectCSVFormat(headers: string[]): CSVFormat | null {
@@ -96,26 +98,29 @@ export function detectCSVFormat(headers: string[]): CSVFormat | null {
   if (hasDate && hasDescription && hasAmount) {
     const dateCol = headers.find((h) =>
       normalizeColumnName(h).includes("date")
-    )!;
+    );
     const descCol = headers.find(
       (h) =>
         normalizeColumnName(h).includes("description") ||
         normalizeColumnName(h).includes("memo") ||
         normalizeColumnName(h).includes("name")
-    )!;
+    );
     const amountCol = headers.find(
       (h) =>
         normalizeColumnName(h).includes("amount") ||
         normalizeColumnName(h).includes("debit") ||
         normalizeColumnName(h).includes("credit")
-    )!;
+    );
 
-    return {
-      name: "Auto-detected",
-      dateColumn: dateCol,
-      descriptionColumn: descCol,
-      amountColumn: amountCol,
-    };
+    // All columns should exist since we checked hasDate, hasDescription, hasAmount
+    if (dateCol && descCol && amountCol) {
+      return {
+        name: "Auto-detected",
+        dateColumn: dateCol,
+        descriptionColumn: descCol,
+        amountColumn: amountCol,
+      };
+    }
   }
 
   return null;
@@ -199,13 +204,16 @@ export function parseCSV(csvContent: string): CSVParseResult {
   }
 
   for (let i = 0; i < result.data.length; i++) {
+    // eslint-disable-next-line security/detect-object-injection -- Safe array index access in for loop
     const row = result.data[i];
     const rowNum = i + 2; // +2 for header row and 1-based indexing
 
     const dateStr = row[format.dateColumn];
     const description = row[format.descriptionColumn];
     const amountStr = row[format.amountColumn];
-    const merchant = format.merchantColumn ? row[format.merchantColumn] : undefined;
+    const merchant = format.merchantColumn
+      ? row[format.merchantColumn]
+      : undefined;
 
     if (!dateStr || !description || !amountStr) {
       errors.push(`Row ${rowNum}: Missing required fields`);

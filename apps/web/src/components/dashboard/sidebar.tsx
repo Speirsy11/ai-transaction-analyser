@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn, Button, ScrollArea, Separator } from "@finance/ui";
+import { cn, Separator } from "@finance/ui";
 import {
   LayoutDashboard,
   Receipt,
@@ -10,7 +10,6 @@ import {
   Settings,
   Upload,
   Sparkles,
-  CreditCard,
   TrendingUp,
 } from "lucide-react";
 
@@ -57,14 +56,14 @@ export function DashboardSidebar() {
     <>
       {/* Desktop sidebar */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r bg-card px-6 pb-4">
+        <div className="bg-card flex grow flex-col gap-y-5 overflow-y-auto border-r px-6 pb-4">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-primary-foreground" />
+              <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
+                <Sparkles className="text-primary-foreground h-5 w-5" />
               </div>
-              <span className="font-bold text-xl">FinanceAI</span>
+              <span className="text-xl font-bold">FinanceAI</span>
             </Link>
           </div>
 

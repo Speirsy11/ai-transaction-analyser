@@ -18,16 +18,18 @@
     "@finance/db": "workspace:*",
     "@finance/api": "workspace:*",
     "@finance/ui": "workspace:*",
-    "date-fns": "^4.1.0",
-    "recharts": "^2.15.0",
-    "zod": "^3.24.1"
+    "date-fns": "catalog:",
+    "drizzle-orm": "catalog:",
+    "lucide-react": "catalog:",
+    "recharts": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "catalog:"
   },
   "devDependencies": {
     "@finance/config": "workspace:*",
-    "@types/react": "^19.0.2",
-    "typescript": "^5.7.2"
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
   }
 }

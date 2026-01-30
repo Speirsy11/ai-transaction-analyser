@@ -64,14 +64,15 @@ export default function BudgetPage() {
     }
   };
 
-  const [incomeInput, setIncomeInput] = useState(
+  // Income input for future "Set Budget" feature
+  const [_incomeInput, _setIncomeInput] = useState(
     budget?.totalIncome.toString() || ""
   );
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Budget</h2>
           <p className="text-muted-foreground">
@@ -96,7 +97,7 @@ export default function BudgetPage() {
             size="sm"
             onClick={() => setIsEditing(!isEditing)}
           >
-            <Settings className="h-4 w-4 mr-2" />
+            <Settings className="mr-2 h-4 w-4" />
             {isEditing ? "Cancel" : "Customize"}
           </Button>
         </div>
@@ -119,7 +120,8 @@ export default function BudgetPage() {
                 updateAllocation.mutate({
                   month,
                   year,
-                  totalIncome: parseFloat(formData.get("income") as string) || 0,
+                  totalIncome:
+                    parseFloat(formData.get("income") as string) || 0,
                   needsPercent:
                     parseFloat(formData.get("needs") as string) || 50,
                   wantsPercent:
@@ -257,18 +259,18 @@ export default function BudgetPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-              <div className="text-3xl font-bold text-blue-600 mb-2">50%</div>
+            <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+              <div className="mb-2 text-3xl font-bold text-blue-600">50%</div>
               <h4 className="font-semibold text-blue-800 dark:text-blue-200">
                 Needs
               </h4>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                Essential expenses like housing, utilities, groceries, healthcare,
-                and minimum debt payments.
+                Essential expenses like housing, utilities, groceries,
+                healthcare, and minimum debt payments.
               </p>
             </div>
-            <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-              <div className="text-3xl font-bold text-purple-600 mb-2">30%</div>
+            <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
+              <div className="mb-2 text-3xl font-bold text-purple-600">30%</div>
               <h4 className="font-semibold text-purple-800 dark:text-purple-200">
                 Wants
               </h4>
@@ -277,8 +279,8 @@ export default function BudgetPage() {
                 and subscriptions.
               </p>
             </div>
-            <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20">
-              <div className="text-3xl font-bold text-green-600 mb-2">20%</div>
+            <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
+              <div className="mb-2 text-3xl font-bold text-green-600">20%</div>
               <h4 className="font-semibold text-green-800 dark:text-green-200">
                 Savings
               </h4>

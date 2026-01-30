@@ -1,8 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@finance/ui";
-import { TransactionUploader, type ParsedTransaction } from "@finance/transactions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@finance/ui";
+import {
+  TransactionUploader,
+  type ParsedTransaction,
+} from "@finance/transactions";
 import { trpc } from "@/trpc/client";
 import { CheckCircle2, FileSpreadsheet, Sparkles, Lock } from "lucide-react";
 
@@ -31,7 +40,9 @@ export default function ImportPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Import Transactions</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Import Transactions
+        </h2>
         <p className="text-muted-foreground">
           Upload your bank statement to automatically import and categorize
           transactions
@@ -64,7 +75,7 @@ export default function ImportPage() {
               <CardTitle className="text-base">Supported Formats</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground text-sm">
             <ul className="space-y-1">
               <li>Chase Bank CSV</li>
               <li>Bank of America CSV</li>
@@ -82,7 +93,7 @@ export default function ImportPage() {
               <CardTitle className="text-base">AI Classification</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground text-sm">
             <p>
               Our AI automatically analyzes each transaction and assigns the
               most appropriate category. You can review and adjust
@@ -98,7 +109,7 @@ export default function ImportPage() {
               <CardTitle className="text-base">Your Data is Secure</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground text-sm">
             <p>
               Files are processed locally in your browser. Only the extracted
               transaction data is sent to our servers, encrypted in transit and
@@ -119,30 +130,40 @@ export default function ImportPage() {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h4 className="font-semibold mb-2">Chase</h4>
-              <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1">
+              <h4 className="mb-2 font-semibold">Chase</h4>
+              <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
                 <li>Log in to chase.com</li>
-                <li>Go to your account and select "See statements and activity"</li>
-                <li>Click "Download activity" and select CSV format</li>
+                <li>
+                  Go to your account and select &quot;See statements and
+                  activity&quot;
+                </li>
+                <li>
+                  Click &quot;Download activity&quot; and select CSV format
+                </li>
                 <li>Choose your date range and download</li>
               </ol>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Bank of America</h4>
-              <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1">
+              <h4 className="mb-2 font-semibold">Bank of America</h4>
+              <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
                 <li>Log in to bankofamerica.com</li>
-                <li>Go to your account and click "Download"</li>
-                <li>Select "Microsoft Excel" or "CSV" format</li>
+                <li>Go to your account and click &quot;Download&quot;</li>
+                <li>
+                  Select &quot;Microsoft Excel&quot; or &quot;CSV&quot; format
+                </li>
                 <li>Choose your date range and download</li>
               </ol>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Wells Fargo</h4>
-              <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1">
+              <h4 className="mb-2 font-semibold">Wells Fargo</h4>
+              <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
                 <li>Log in to wellsfargo.com</li>
-                <li>Go to your account and select "Download Account Activity"</li>
+                <li>
+                  Go to your account and select &quot;Download Account
+                  Activity&quot;
+                </li>
                 <li>Choose CSV format and your date range</li>
-                <li>Click "Download"</li>
+                <li>Click &quot;Download&quot;</li>
               </ol>
             </div>
           </div>
