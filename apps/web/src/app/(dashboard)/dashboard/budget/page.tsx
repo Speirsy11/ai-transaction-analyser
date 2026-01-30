@@ -76,7 +76,7 @@ export default function BudgetPage() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Budget</h2>
           <p className="text-muted-foreground">
-            Track your spending against the 50/30/20 rule
+            Your buddy helps you track and reach your spending goals
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -252,41 +252,45 @@ export default function BudgetPage() {
       {/* Budget Tips */}
       <Card>
         <CardHeader>
-          <CardTitle>50/30/20 Rule Explained</CardTitle>
+          <CardTitle>How Your Buddy Helps You Budget</CardTitle>
           <CardDescription>
-            A simple budgeting framework to help you manage your money
+            BudgetBuddy organizes your spending into three simple categories
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-              <div className="mb-2 text-3xl font-bold text-blue-600">50%</div>
+              <div className="mb-2 text-2xl font-bold text-blue-600">Needs</div>
               <h4 className="font-semibold text-blue-800 dark:text-blue-200">
-                Needs
+                The Essentials
               </h4>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                Essential expenses like housing, utilities, groceries,
-                healthcare, and minimum debt payments.
+                Housing, utilities, groceries, healthcare, and minimum debt
+                payments. Your buddy tracks these automatically.
               </p>
             </div>
             <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
-              <div className="mb-2 text-3xl font-bold text-purple-600">30%</div>
-              <h4 className="font-semibold text-purple-800 dark:text-purple-200">
+              <div className="mb-2 text-2xl font-bold text-purple-600">
                 Wants
+              </div>
+              <h4 className="font-semibold text-purple-800 dark:text-purple-200">
+                The Fun Stuff
               </h4>
               <p className="text-sm text-purple-700 dark:text-purple-300">
-                Non-essential spending like entertainment, dining out, shopping,
-                and subscriptions.
+                Entertainment, dining out, shopping, and subscriptions. Enjoy
+                life while staying on track!
               </p>
             </div>
             <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-              <div className="mb-2 text-3xl font-bold text-green-600">20%</div>
-              <h4 className="font-semibold text-green-800 dark:text-green-200">
+              <div className="mb-2 text-2xl font-bold text-green-600">
                 Savings
+              </div>
+              <h4 className="font-semibold text-green-800 dark:text-green-200">
+                Future You
               </h4>
               <p className="text-sm text-green-700 dark:text-green-300">
-                Savings, investments, and extra debt payments beyond the minimum
-                required.
+                Savings, investments, and extra debt payments. Your buddy cheers
+                you on as you build wealth!
               </p>
             </div>
           </div>

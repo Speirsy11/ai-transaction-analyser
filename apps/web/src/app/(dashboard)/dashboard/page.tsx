@@ -188,7 +188,7 @@ export default function DashboardPage() {
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle>50/30/20 Budget</CardTitle>
+              <CardTitle>Smart Budget Goals</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

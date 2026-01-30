@@ -4,20 +4,20 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FinanceAI - AI-Powered Personal Finance",
+  title: "BudgetBuddy - AI-Powered Personal Finance",
   description:
-    "Take control of your finances with AI-powered transaction categorization, smart budgeting with the 50/30/20 rule, and actionable insights.",
+    "Your friendly AI finance buddy that categorizes transactions, sets personalized budget goals, and gives you helpful insights.",
   keywords: [
     "personal finance",
     "budgeting",
     "AI",
     "transaction categorization",
-    "50/30/20 rule",
+    "smart budgeting",
     "money management",
   ],
-  authors: [{ name: "FinanceAI" }],
+  authors: [{ name: "BudgetBuddy" }],
   openGraph: {
-    title: "FinanceAI - AI-Powered Personal Finance",
+    title: "BudgetBuddy - AI-Powered Personal Finance",
     description:
       "Take control of your finances with AI-powered transaction categorization and smart budgeting.",
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FinanceAI - AI-Powered Personal Finance",
+    title: "BudgetBuddy - AI-Powered Personal Finance",
     description:
       "Take control of your finances with AI-powered transaction categorization and smart budgeting.",
   },

@@ -89,23 +89,23 @@ export function WeeklySummaryEmail({
             </div>
           </Section>
 
-          {/* 50/30/20 Progress */}
+          {/* Budget Progress */}
           <Section style={sectionContainer}>
-            <Text style={sectionTitle}>50/30/20 Budget Progress</Text>
+            <Text style={sectionTitle}>Your Budget Goals Progress</Text>
             <BudgetBar
-              label="Needs (50%)"
+              label="Needs"
               spent={budgetStatus.needs.spent}
               budget={budgetStatus.needs.budget}
               color="#3b82f6"
             />
             <BudgetBar
-              label="Wants (30%)"
+              label="Wants"
               spent={budgetStatus.wants.spent}
               budget={budgetStatus.wants.budget}
               color="#8b5cf6"
             />
             <BudgetBar
-              label="Savings (20%)"
+              label="Savings"
               spent={budgetStatus.savings.spent}
               budget={budgetStatus.savings.budget}
               color="#059669"

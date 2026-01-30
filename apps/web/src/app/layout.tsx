@@ -7,9 +7,9 @@ import { TRPCProvider } from "@/trpc/provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FinanceAI - Smart Personal Finance",
+  title: "BudgetBuddy - Smart Personal Finance",
   description:
-    "AI-powered personal finance dashboard with automatic transaction categorization and 50/30/20 budgeting",
+    "Your friendly AI finance buddy with smart transaction categorization and personalized budget goals",
   keywords: ["finance", "budget", "AI", "personal finance", "money management"],
 };
 

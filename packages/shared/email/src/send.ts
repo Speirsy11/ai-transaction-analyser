@@ -19,7 +19,7 @@ export async function sendWelcomeEmail(
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to,
-      subject: "Welcome to FinanceAI!",
+      subject: "Welcome to BudgetBuddy!",
       react: WelcomeEmail({ userName, dashboardUrl }),
     });
 

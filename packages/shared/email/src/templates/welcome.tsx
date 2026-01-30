@@ -22,14 +22,14 @@ export function WelcomeEmail({ userName, dashboardUrl }: WelcomeEmailProps) {
     <Html>
       <Head />
       <Preview>
-        Welcome to FinanceAI - Your AI-powered finance assistant
+        Welcome to BudgetBuddy - Your AI-powered finance assistant
       </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Welcome to FinanceAI!</Heading>
+          <Heading style={h1}>Welcome to BudgetBuddy!</Heading>
           <Text style={text}>Hi {userName},</Text>
           <Text style={text}>
-            Thank you for signing up for FinanceAI. We&apos;re excited to help
+            Thank you for signing up for BudgetBuddy. We&apos;re excited to help
             you take control of your finances with AI-powered insights.
           </Text>
           <Section style={buttonContainer}>
@@ -41,17 +41,19 @@ export function WelcomeEmail({ userName, dashboardUrl }: WelcomeEmailProps) {
           <ul style={list}>
             <li style={listItem}>Import your first bank statement via CSV</li>
             <li style={listItem}>Let our AI categorize your transactions</li>
-            <li style={listItem}>Track your spending with the 50/30/20 rule</li>
+            <li style={listItem}>
+              Track your spending with personalized budget goals
+            </li>
           </ul>
           <Hr style={hr} />
           <Text style={footer}>
             If you have any questions, just reply to this email. We&apos;re
             always happy to help!
           </Text>
-          <Text style={footer}>- The FinanceAI Team</Text>
+          <Text style={footer}>- The BudgetBuddy Team</Text>
           <Hr style={hr} />
-          <Link href="https://financeai.com" style={footerLink}>
-            FinanceAI
+          <Link href="https://budgetbuddy.com" style={footerLink}>
+            BudgetBuddy
           </Link>
         </Container>
       </Body>

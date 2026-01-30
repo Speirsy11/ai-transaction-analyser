@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@finance/auth";
 import { Button } from "@finance/ui";
 import {
-  Sparkles,
+  Smile,
   PieChart,
   Upload,
   Shield,
@@ -18,9 +18,9 @@ export default function LandingPage() {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-              <Sparkles className="text-primary-foreground h-5 w-5" />
+              <Smile className="text-primary-foreground h-5 w-5" />
             </div>
-            <span className="text-xl font-bold">FinanceAI</span>
+            <span className="text-xl font-bold">BudgetBuddy</span>
           </div>
           <div className="flex items-center gap-4">
             <SignedOut>
@@ -47,7 +47,7 @@ export default function LandingPage() {
       <section className="px-4 pb-20 pt-32">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="bg-primary/10 text-primary mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium">
-            <Sparkles className="h-4 w-4" />
+            <Smile className="h-4 w-4" />
             AI-Powered Finance Management
           </div>
           <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
@@ -55,9 +55,8 @@ export default function LandingPage() {
             <span className="text-primary">Intelligent</span> Insights
           </h1>
           <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-xl">
-            Automatically categorize transactions, track spending with the
-            50/30/20 rule, and get AI-powered insights to optimize your
-            financial health.
+            Your friendly AI buddy automatically categorizes transactions, sets
+            personalized budget goals, and helps you build better money habits.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <SignedOut>
@@ -95,7 +94,7 @@ export default function LandingPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                icon: Sparkles,
+                icon: Smile,
                 title: "AI Classification",
                 description:
                   "Automatically categorize transactions using advanced AI. No manual tagging required.",
@@ -104,9 +103,9 @@ export default function LandingPage() {
               },
               {
                 icon: PieChart,
-                title: "50/30/20 Budgeting",
+                title: "Smart Budget Goals",
                 description:
-                  "Follow the proven budgeting rule with automatic tracking of needs, wants, and savings.",
+                  "Your AI buddy learns your spending habits and helps you set achievable, personalized budget goals.",
                 color: "text-blue-500",
                 bgColor: "bg-blue-500/10",
               },
@@ -175,13 +174,13 @@ export default function LandingPage() {
                 step: "01",
                 title: "Upload Your Transactions",
                 description:
-                  "Export a CSV from your bank and drag it into FinanceAI. We support all major banks.",
+                  "Export a CSV from your bank and drag it into BudgetBuddy. We support all major banks.",
               },
               {
                 step: "02",
-                title: "AI Categorizes Everything",
+                title: "Your Buddy Gets to Work",
                 description:
-                  "Our AI automatically categorizes each transaction into needs, wants, or savings.",
+                  "BudgetBuddy automatically categorizes your transactions and suggests personalized goals.",
               },
               {
                 step: "03",
@@ -215,7 +214,7 @@ export default function LandingPage() {
           </h2>
           <p className="mb-8 text-lg opacity-90">
             Join thousands of users who have taken control of their money with
-            FinanceAI.
+            BudgetBuddy.
           </p>
           <SignedOut>
             <SignUpButton>
@@ -242,12 +241,12 @@ export default function LandingPage() {
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-2">
               <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                <Sparkles className="text-primary-foreground h-5 w-5" />
+                <Smile className="text-primary-foreground h-5 w-5" />
               </div>
-              <span className="text-xl font-bold">FinanceAI</span>
+              <span className="text-xl font-bold">BudgetBuddy</span>
             </div>
             <p className="text-muted-foreground text-sm">
-              © 2024 FinanceAI. All rights reserved.
+              © 2024 BudgetBuddy. All rights reserved.
             </p>
           </div>
         </div>

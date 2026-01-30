@@ -21,7 +21,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     features: [
       "Up to 100 transactions/month",
       "Basic AI categorization",
-      "50/30/20 budget tracking",
+      "Smart budget goal tracking",
       "CSV import from major banks",
       "7-day transaction history",
     ],

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@finance/ui";
 import { PRICING_PLANS } from "@finance/payments";
 import {
-  Sparkles,
+  Smile,
   PieChart,
   Upload,
   Shield,
@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Check,
   ArrowRight,
+  Sparkles,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -20,9 +21,9 @@ export default function HomePage() {
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-              <Sparkles className="text-primary-foreground h-5 w-5" />
+              <Smile className="text-primary-foreground h-5 w-5" />
             </div>
-            <span className="text-xl font-bold">FinanceAI</span>
+            <span className="text-xl font-bold">BudgetBuddy</span>
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <Link
@@ -64,7 +65,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <div className="bg-primary/10 text-primary mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium">
-                <Sparkles className="h-4 w-4" />
+                <Smile className="h-4 w-4" />
                 AI-Powered Finance Management
               </div>
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
@@ -72,9 +73,9 @@ export default function HomePage() {
                 <span className="text-primary">finances</span> with AI
               </h1>
               <p className="text-muted-foreground mt-6 text-lg leading-8">
-                FinanceAI automatically categorizes your transactions, tracks
-                your spending with the 50/30/20 rule, and gives you actionable
-                insights to reach your financial goals.
+                BudgetBuddy is your friendly AI finance companion that
+                categorizes transactions, sets personalized goals, and cheers
+                you on as you build better money habits.
               </p>
               <div className="mt-10 flex items-center justify-center gap-4">
                 <Link href="http://localhost:3000/sign-up">
@@ -116,8 +117,8 @@ export default function HomePage() {
               />
               <FeatureCard
                 icon={PieChart}
-                title="50/30/20 Budgeting"
-                description="Track your spending against the proven 50/30/20 rule. Needs, wants, and savings - all in one view."
+                title="Smart Budget Goals"
+                description="Your buddy learns your habits and suggests personalized spending goals you can actually stick to."
               />
               <FeatureCard
                 icon={Upload}
@@ -159,7 +160,7 @@ export default function HomePage() {
               <StepCard
                 step={1}
                 title="Upload Your Transactions"
-                description="Export a CSV from your bank and upload it to FinanceAI. We support all major banks."
+                description="Export a CSV from your bank and upload it to BudgetBuddy. We support all major banks."
               />
               <StepCard
                 step={2}
@@ -224,8 +225,8 @@ export default function HomePage() {
                 answer="Yes! You can cancel your subscription at any time from your account settings. You'll continue to have access until the end of your billing period."
               />
               <FAQItem
-                question="What's the 50/30/20 rule?"
-                answer="The 50/30/20 rule is a popular budgeting framework: 50% of income goes to needs (housing, food, utilities), 30% to wants (entertainment, dining out), and 20% to savings and debt repayment."
+                question="How does BudgetBuddy set my budget goals?"
+                answer="BudgetBuddy analyzes your spending patterns and income to suggest personalized, achievable goals. As you use the app, your buddy learns what works for you and adjusts recommendations to help you succeed."
               />
             </div>
           </div>
@@ -240,7 +241,7 @@ export default function HomePage() {
               </h2>
               <p className="text-primary-foreground/80 mx-auto mt-6 max-w-xl text-lg leading-8">
                 Join thousands of users who have transformed their financial
-                habits with FinanceAI.
+                habits with BudgetBuddy.
               </p>
               <div className="mt-10 flex items-center justify-center gap-4">
                 <Link href="http://localhost:3000/sign-up">
@@ -261,12 +262,13 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-2">
               <div className="bg-primary flex h-6 w-6 items-center justify-center rounded">
-                <Sparkles className="text-primary-foreground h-4 w-4" />
+                <Smile className="text-primary-foreground h-4 w-4" />
               </div>
-              <span className="font-semibold">FinanceAI</span>
+              <span className="font-semibold">BudgetBuddy</span>
             </div>
             <p className="text-muted-foreground text-sm">
-              &copy; {new Date().getFullYear()} FinanceAI. All rights reserved.
+              &copy; {new Date().getFullYear()} BudgetBuddy. All rights
+              reserved.
             </p>
             <div className="flex gap-6">
               <Link

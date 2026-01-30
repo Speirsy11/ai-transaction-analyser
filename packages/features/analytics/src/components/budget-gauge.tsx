@@ -45,7 +45,7 @@ export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>50/30/20 Budget</span>
+          <span>Smart Budget Goals</span>
           <span className="text-muted-foreground text-sm font-normal">
             Savings Rate: {formatPercent(breakdown.savingsRate)}
           </span>

@@ -9,7 +9,7 @@ import {
   PieChart,
   Settings,
   Upload,
-  Sparkles,
+  Smile,
   TrendingUp,
 } from "lucide-react";
 
@@ -61,9 +61,9 @@ export function DashboardSidebar() {
           <div className="flex h-16 shrink-0 items-center">
             <Link href="/dashboard" className="flex items-center gap-2">
               <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                <Sparkles className="text-primary-foreground h-5 w-5" />
+                <Smile className="text-primary-foreground h-5 w-5" />
               </div>
-              <span className="text-xl font-bold">FinanceAI</span>
+              <span className="text-xl font-bold">BudgetBuddy</span>
             </Link>
           </div>
 
