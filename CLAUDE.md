@@ -13,7 +13,10 @@ AI-powered personal finance dashboard with automatic transaction categorization 
 - **Database:** PostgreSQL + Drizzle ORM
 - **AI:** Vercel AI SDK with OpenAI
 - **Styling:** Tailwind CSS, Shadcn/UI components
-- **Payments:** Stripe (planned)
+- **Payments:** Stripe
+- **Email:** Resend with React Email templates
+- **Testing:** Vitest (unit), Playwright (E2E)
+- **CI/CD:** GitHub Actions
 
 ## Architecture
 
@@ -22,18 +25,23 @@ Three-layer architecture with strict import boundaries:
 ```
 apps/                           # Compositions (can import all)
 ├── web/                        # Next.js Dashboard
+└── marketing/                  # Marketing/landing site
 
 packages/features/              # Features (can import shared only)
 ├── auth/                       # Clerk integration
-├── transactions/               # CSV parsing, AI classification
-└── analytics/                  # 50/30/20 budgeting, charts
+├── transactions/               # CSV parsing, AI classification, export
+├── analytics/                  # 50/30/20 budgeting, charts
+└── payments/                   # Stripe integration
 
 packages/shared/                # Shared (can import shared only)
 ├── ui/                         # Shadcn components
 ├── db/                         # Drizzle schema & client
 ├── api/                        # tRPC root builder
 ├── ai/                         # Vercel AI SDK setup
+├── email/                      # Resend + React Email templates
 └── config/                     # TypeScript, ESLint configs
+
+e2e/                            # Playwright E2E tests
 ```
 
 **Import Rules (enforced by Turborepo):**
@@ -118,6 +126,10 @@ All external dependencies must be defined in `pnpm-workspace.yaml` under the `ca
 - **UI Components:** `packages/shared/ui/src/components/`
 - **Dashboard Pages:** `apps/web/src/app/(dashboard)/dashboard/`
 - **API Routes:** `apps/web/src/app/api/`
+- **Stripe Integration:** `packages/features/payments/src/`
+- **Email Templates:** `packages/shared/email/src/templates/`
+- **E2E Tests:** `e2e/`
+- **CI/CD:** `.github/workflows/ci.yml`
 
 ### Environment Variables
 
@@ -128,6 +140,9 @@ DATABASE_URL=postgresql://...
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 OPENAI_API_KEY=sk-...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+RESEND_API_KEY=re_...
 ```
 
 ### Common Commands
@@ -146,10 +161,14 @@ pnpm lint                   # Lint all packages
 pnpm lint:fix               # Auto-fix lint issues
 pnpm format                 # Format all files
 
-# Testing
+# Unit Testing
 pnpm test                   # Run tests in watch mode
 pnpm test:run               # Run tests once
 pnpm test:coverage          # Run tests with coverage
+
+# E2E Testing
+pnpm test:e2e               # Run Playwright tests
+pnpm test:e2e:ui            # Run Playwright with UI mode
 
 # Database
 pnpm db:generate            # Generate Drizzle migrations
@@ -175,14 +194,18 @@ pnpm clean                  # Clean all build artifacts
 
 ### TODO
 
-- [ ] Set up PostgreSQL database and run migrations
+- [ ] Set up PostgreSQL database and run migrations (schema ready, needs DB instance)
+- [ ] Add rate limiting on API routes
+
+### Recently Completed
+
 - [x] Add Vitest for unit testing (45 tests passing)
-- [ ] Implement Stripe payments
-- [ ] Add marketing site (apps/marketing)
-- [ ] Add E2E tests with Playwright
-- [ ] Set up CI/CD pipeline
-- [ ] Add email notifications
-- [ ] Implement data export feature
+- [x] Implement Stripe payments (checkout, webhooks, subscriptions, plans)
+- [x] Add marketing site (apps/marketing with hero, features, pricing, FAQ)
+- [x] Add E2E tests with Playwright (landing page tests)
+- [x] Set up CI/CD pipeline (GitHub Actions: lint, typecheck, test, build)
+- [x] Add email notifications (Resend + React Email: welcome, budget alerts, weekly summary)
+- [x] Implement data export feature (CSV, JSON, full data export)
 
 ## Security Considerations
 
