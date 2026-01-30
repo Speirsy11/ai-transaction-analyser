@@ -24,6 +24,9 @@ catalog:
   drizzle-orm: "^0.38.3"
   postgres: "^3.4.5"
 
+  # Redis
+  ioredis: "^5.4.1"
+
   # tRPC & API
   "@tanstack/react-query": "^5.62.8"
   "@trpc/client": "^11.0.0-rc.663"

@@ -1,4 +1,10 @@
-import { router, protectedProcedure, z } from "@finance/api";
+import {
+  router,
+  protectedProcedure,
+  aiRateLimitedProcedure,
+  uploadRateLimitedProcedure,
+  z,
+} from "@finance/api";
 import { db, transactions } from "@finance/db";
 import { eq, and, gte, lte, desc, like, sql } from "drizzle-orm";
 import { transactionFilterSchema } from "./schema";
@@ -104,7 +110,7 @@ export const transactionsRouter = router({
       return transaction;
     }),
 
-  createMany: protectedProcedure
+  createMany: uploadRateLimitedProcedure
     .input(
       z.object({
         transactions: z.array(
@@ -206,7 +212,7 @@ export const transactionsRouter = router({
       return { success: true };
     }),
 
-  classify: protectedProcedure
+  classify: aiRateLimitedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const transaction = await db.query.transactions.findFirst({

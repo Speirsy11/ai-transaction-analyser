@@ -20,6 +20,7 @@
     "@trpc/client": "catalog:",
     "@trpc/react-query": "catalog:",
     "@tanstack/react-query": "catalog:",
+    "ioredis": "catalog:",
     "superjson": "catalog:",
     "zod": "catalog:"
   },
