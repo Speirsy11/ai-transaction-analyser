@@ -10,6 +10,17 @@ export {
 } from "./csv-parser";
 export { classifyTransaction, classifyTransactionsBatch } from "./classifier";
 
+// Export
+export {
+  exportToCSV,
+  exportToJSON,
+  exportBudgetData,
+  generateFullExport,
+  createExportBlob,
+  type ExportableTransaction,
+  type ExportOptions,
+} from "./export";
+
 // Router
 export { transactionsRouter } from "./router";
 
