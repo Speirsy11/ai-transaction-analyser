@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@finance/auth";
+import { auth } from "@finance/auth/server";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { DashboardHeader } from "@/components/dashboard/header";
 

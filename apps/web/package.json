@@ -31,7 +31,9 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "superjson": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "ioredis": "catalog:",
+    "postgres": "catalog:"
   },
   "devDependencies": {
     "@finance/config": "workspace:*",

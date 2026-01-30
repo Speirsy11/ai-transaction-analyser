@@ -6,11 +6,7 @@ export { SignUpButton } from "./components/sign-up-button";
 // Hooks
 export { useCurrentUser } from "./hooks/use-current-user";
 
-// Server
-export { authRouter } from "./router";
-export { syncUser } from "./sync-user";
-
-// Re-exports from Clerk
+// Re-exports from Clerk (client-safe)
 export {
   SignIn,
   SignUp,
@@ -21,5 +17,3 @@ export {
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
-
-export { currentUser, auth } from "@clerk/nextjs/server";

@@ -1,4 +1,4 @@
-import { auth } from "@finance/auth";
+import { auth } from "@finance/auth/server";
 import type { TRPCContext } from "@finance/api";
 import { appRouter } from "./routers";
 import { createCallerFactory } from "@finance/api";

@@ -1,16 +1,15 @@
 // Schema
 export { transactionSchema, type TransactionFormData } from "./schema";
 
-// Utils
+// Utils (client-safe)
 export {
   parseCSV,
   detectCSVFormat,
   type CSVParseResult,
   type ParsedTransaction,
 } from "./csv-parser";
-export { classifyTransaction, classifyTransactionsBatch } from "./classifier";
 
-// Export
+// Export utilities (client-safe)
 export {
   exportToCSV,
   exportToJSON,
@@ -20,9 +19,6 @@ export {
   type ExportableTransaction,
   type ExportOptions,
 } from "./export";
-
-// Router
-export { transactionsRouter } from "./router";
 
 // Components
 export { TransactionTable } from "./components/transaction-table";

@@ -1,4 +1,4 @@
-// Calculations
+// Calculations (client-safe)
 export {
   calculate503020,
   calculateBudgetProgress,
@@ -9,9 +9,6 @@ export {
   type BudgetBreakdown,
   type SpendingTrend,
 } from "./calculations";
-
-// Router
-export { analyticsRouter } from "./router";
 
 // Components
 export { BudgetGauge } from "./components/budget-gauge";

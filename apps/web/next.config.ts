@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "@finance/transactions",
     "@finance/analytics",
   ],
+  serverExternalPackages: ["ioredis", "postgres"],
   experimental: {
     optimizePackageImports: ["@finance/ui", "lucide-react"],
   },
