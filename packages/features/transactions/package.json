@@ -19,6 +19,7 @@
     "@finance/db": "workspace:*",
     "@finance/api": "workspace:*",
     "@finance/ai": "workspace:*",
+    "@finance/logger": "workspace:*",
     "@finance/ui": "workspace:*",
     "date-fns": "catalog:",
     "drizzle-orm": "catalog:",

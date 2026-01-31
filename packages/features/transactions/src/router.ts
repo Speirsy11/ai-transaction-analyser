@@ -6,9 +6,12 @@ import {
   z,
 } from "@finance/api";
 import { db, transactions } from "@finance/db";
+import { logger, createTimer } from "@finance/logger";
 import { eq, and, gte, lte, desc, like, sql } from "drizzle-orm";
 import { transactionFilterSchema } from "./schema";
 import { classifyTransaction, classifyTransactionsBatch } from "./classifier";
+
+const log = logger.child({ module: "transactions" });
 
 export const transactionsRouter = router({
   list: protectedProcedure
@@ -20,6 +23,9 @@ export const transactionsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      const timer = createTimer();
+      log.debug({ userId: ctx.userId, input }, "list: fetching transactions");
+
       const conditions = [eq(transactions.userId, ctx.userId)];
 
       if (input.filters?.startDate) {
@@ -59,16 +65,33 @@ export const transactionsRouter = router({
           .where(and(...conditions)),
       ]);
 
-      return {
+      const result = {
         data,
         total: countResult[0]?.count ?? 0,
         hasMore: input.offset + data.length < (countResult[0]?.count ?? 0),
       };
+
+      log.info(
+        {
+          userId: ctx.userId,
+          count: data.length,
+          total: result.total,
+          durationMs: timer.elapsed(),
+        },
+        "list: completed"
+      );
+
+      return result;
     }),
 
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      log.debug(
+        { userId: ctx.userId, transactionId: input.id },
+        "getById: fetching transaction"
+      );
+
       const transaction = await db.query.transactions.findFirst({
         where: and(
           eq(transactions.id, input.id),
@@ -78,6 +101,18 @@ export const transactionsRouter = router({
           category: true,
         },
       });
+
+      if (!transaction) {
+        log.warn(
+          { userId: ctx.userId, transactionId: input.id },
+          "getById: transaction not found"
+        );
+      } else {
+        log.debug(
+          { userId: ctx.userId, transactionId: input.id },
+          "getById: found"
+        );
+      }
 
       return transaction;
     }),
@@ -94,6 +129,15 @@ export const transactionsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      log.debug(
+        {
+          userId: ctx.userId,
+          amount: input.amount,
+          description: input.description,
+        },
+        "create: creating transaction"
+      );
+
       const [transaction] = await db
         .insert(transactions)
         .values({
@@ -106,6 +150,15 @@ export const transactionsRouter = router({
           notes: input.notes,
         })
         .returning();
+
+      log.info(
+        {
+          userId: ctx.userId,
+          transactionId: transaction?.id,
+          amount: input.amount,
+        },
+        "create: transaction created"
+      );
 
       return transaction;
     }),
@@ -125,6 +178,16 @@ export const transactionsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const timer = createTimer();
+      log.info(
+        {
+          userId: ctx.userId,
+          count: input.transactions.length,
+          autoClassify: input.autoClassify,
+        },
+        "createMany: starting bulk import"
+      );
+
       let transactionsToInsert = input.transactions.map((t) => ({
         userId: ctx.userId,
         amount: t.amount,
@@ -135,35 +198,66 @@ export const transactionsRouter = router({
 
       // Auto-classify if requested
       if (input.autoClassify) {
-        const classifications = await classifyTransactionsBatch(
-          input.transactions.map((t) => ({
-            description: t.description,
-            amount: t.amount,
-            merchant: t.merchant,
-            date: t.date,
-          }))
+        log.debug(
+          { userId: ctx.userId, count: input.transactions.length },
+          "createMany: starting AI classification"
         );
+        const classifyTimer = createTimer();
 
-        transactionsToInsert = transactionsToInsert.map((t, i) => {
-          // eslint-disable-next-line security/detect-object-injection -- Safe array index access within map callback
-          const classification = classifications[i];
-          return {
-            ...t,
-            aiClassified: classification?.category,
-            necessityScore:
-              classification?.necessityType === "need"
-                ? 1
-                : classification?.necessityType === "savings"
-                  ? 0.5
-                  : 0,
-          };
-        });
+        try {
+          const classifications = await classifyTransactionsBatch(
+            input.transactions.map((t) => ({
+              description: t.description,
+              amount: t.amount,
+              merchant: t.merchant,
+              date: t.date,
+            }))
+          );
+
+          log.info(
+            {
+              userId: ctx.userId,
+              count: classifications.length,
+              durationMs: classifyTimer.elapsed(),
+            },
+            "createMany: AI classification completed"
+          );
+
+          transactionsToInsert = transactionsToInsert.map((t, i) => {
+            // eslint-disable-next-line security/detect-object-injection -- Safe array index access within map callback
+            const classification = classifications[i];
+            return {
+              ...t,
+              aiClassified: classification?.category,
+              necessityScore:
+                classification?.necessityType === "need"
+                  ? 1
+                  : classification?.necessityType === "savings"
+                    ? 0.5
+                    : 0,
+            };
+          });
+        } catch (error) {
+          log.error(
+            { userId: ctx.userId, error },
+            "createMany: AI classification failed, proceeding without classification"
+          );
+        }
       }
 
       const inserted = await db
         .insert(transactions)
         .values(transactionsToInsert)
         .returning();
+
+      log.info(
+        {
+          userId: ctx.userId,
+          count: inserted.length,
+          durationMs: timer.elapsed(),
+        },
+        "createMany: bulk import completed"
+      );
 
       return { count: inserted.length, transactions: inserted };
     }),
@@ -182,6 +276,14 @@ export const transactionsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...updateData } = input;
+      log.debug(
+        {
+          userId: ctx.userId,
+          transactionId: id,
+          fields: Object.keys(updateData),
+        },
+        "update: updating transaction"
+      );
 
       const [updated] = await db
         .update(transactions)
@@ -194,12 +296,29 @@ export const transactionsRouter = router({
         )
         .returning();
 
+      if (!updated) {
+        log.warn(
+          { userId: ctx.userId, transactionId: id },
+          "update: transaction not found"
+        );
+      } else {
+        log.info(
+          { userId: ctx.userId, transactionId: id },
+          "update: transaction updated"
+        );
+      }
+
       return updated;
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      log.debug(
+        { userId: ctx.userId, transactionId: input.id },
+        "delete: deleting transaction"
+      );
+
       await db
         .delete(transactions)
         .where(
@@ -209,12 +328,23 @@ export const transactionsRouter = router({
           )
         );
 
+      log.info(
+        { userId: ctx.userId, transactionId: input.id },
+        "delete: transaction deleted"
+      );
+
       return { success: true };
     }),
 
   classify: aiRateLimitedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const timer = createTimer();
+      log.debug(
+        { userId: ctx.userId, transactionId: input.id },
+        "classify: starting AI classification"
+      );
+
       const transaction = await db.query.transactions.findFirst({
         where: and(
           eq(transactions.id, input.id),
@@ -223,8 +353,21 @@ export const transactionsRouter = router({
       });
 
       if (!transaction) {
+        log.warn(
+          { userId: ctx.userId, transactionId: input.id },
+          "classify: transaction not found"
+        );
         throw new Error("Transaction not found");
       }
+
+      log.debug(
+        {
+          userId: ctx.userId,
+          transactionId: input.id,
+          description: transaction.description,
+        },
+        "classify: calling AI classifier"
+      );
 
       const classification = await classifyTransaction({
         description: transaction.description,
@@ -232,6 +375,11 @@ export const transactionsRouter = router({
         merchant: transaction.merchant ?? undefined,
         date: transaction.date,
       });
+
+      log.debug(
+        { userId: ctx.userId, transactionId: input.id, classification },
+        "classify: AI classification result"
+      );
 
       const [updated] = await db
         .update(transactions)
@@ -248,6 +396,17 @@ export const transactionsRouter = router({
         .where(eq(transactions.id, input.id))
         .returning();
 
+      log.info(
+        {
+          userId: ctx.userId,
+          transactionId: input.id,
+          category: classification.category,
+          necessityType: classification.necessityType,
+          durationMs: timer.elapsed(),
+        },
+        "classify: classification completed"
+      );
+
       return { transaction: updated, classification };
     }),
 
@@ -259,6 +418,16 @@ export const transactionsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      const timer = createTimer();
+      log.debug(
+        {
+          userId: ctx.userId,
+          startDate: input.startDate,
+          endDate: input.endDate,
+        },
+        "getSummary: calculating summary"
+      );
+
       const userTransactions = await db.query.transactions.findMany({
         where: and(
           eq(transactions.userId, ctx.userId),
@@ -284,12 +453,25 @@ export const transactionsRouter = router({
         categoryTotals[category] = currentTotal + Math.abs(t.amount);
       }
 
-      return {
+      const result = {
         totalIncome,
         totalExpenses,
         netCashFlow: totalIncome - totalExpenses,
         transactionCount: userTransactions.length,
         categoryTotals,
       };
+
+      log.info(
+        {
+          userId: ctx.userId,
+          transactionCount: result.transactionCount,
+          totalIncome: result.totalIncome,
+          totalExpenses: result.totalExpenses,
+          durationMs: timer.elapsed(),
+        },
+        "getSummary: completed"
+      );
+
+      return result;
     }),
 });

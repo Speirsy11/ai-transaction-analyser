@@ -16,6 +16,7 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "dependencies": {
+    "@finance/logger": "workspace:*",
     "@trpc/server": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/react-query": "catalog:",

@@ -1,5 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import { logger } from "@finance/logger";
 import { getRedisClient } from "./redis";
+
+const log = logger.child({ module: "rate-limit" });
 
 export interface RateLimitConfig {
   /**
@@ -82,7 +85,10 @@ async function checkRateLimitRedis(
     return { success, remaining, reset: windowEnd };
   } catch (error) {
     // If Redis fails, allow the request but log the error
-    console.error("Rate limit Redis error:", error);
+    log.error(
+      { err: error, key },
+      "Redis rate limit check failed, allowing request"
+    );
     return { success: true, remaining: limit, reset: windowEnd };
   }
 }

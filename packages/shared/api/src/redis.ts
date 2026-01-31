@@ -1,5 +1,7 @@
 import Redis from "ioredis";
+import { logger } from "@finance/logger";
 
+const log = logger.child({ module: "redis" });
 const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 let redis: Redis | null = null;
@@ -24,7 +26,7 @@ export function getRedisClient(): Redis | null {
     });
 
     redis.on("error", (err) => {
-      console.error("Redis connection error:", err);
+      log.error({ err }, "Redis connection error");
     });
   }
 

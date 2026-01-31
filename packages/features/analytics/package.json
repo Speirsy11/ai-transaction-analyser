@@ -18,6 +18,7 @@
   "dependencies": {
     "@finance/db": "workspace:*",
     "@finance/api": "workspace:*",
+    "@finance/logger": "workspace:*",
     "@finance/ui": "workspace:*",
     "date-fns": "catalog:",
     "drizzle-orm": "catalog:",

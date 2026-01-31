@@ -39,6 +39,7 @@ packages/shared/                # Shared (can import shared only)
 ├── api/                        # tRPC root builder
 ├── ai/                         # Vercel AI SDK setup
 ├── email/                      # Resend + React Email templates
+├── logger/                     # Pino logger (singleton)
 └── config/                     # TypeScript, ESLint configs
 
 e2e/                            # Playwright E2E tests
@@ -112,6 +113,40 @@ git commit -m "feat/fix/refactor: description of changes"
 4. **Imports:** Respect boundary rules - features cannot import other features
 5. **Testing:** Write tests for business logic (calculations, parsers)
 6. **Dependencies:** Always use pnpm workspace catalog (see below)
+7. **Logging:** Use `@finance/logger` instead of `console.log` (enforced by ESLint)
+
+### Logging
+
+**NEVER use `console.log` - use `@finance/logger` instead.**
+
+The logger provides structured logging with automatic redaction of sensitive fields, pretty output in development, and JSON output in production.
+
+```typescript
+import { logger, createTimer } from "@finance/logger";
+
+// Create a child logger for the module
+const log = logger.child({ module: "transactions" });
+
+// Log levels: debug, info, warn, error, fatal
+log.debug({ userId, input }, "Processing request");
+log.info({ transactionId, durationMs: timer.elapsed() }, "Transaction created");
+log.warn({ userId }, "User not found");
+log.error({ err: error }, "Failed to process payment");
+
+// Use createTimer for measuring duration
+const timer = createTimer();
+await doSomething();
+log.info({ durationMs: timer.elapsed() }, "Operation complete");
+```
+
+**Logging guidelines:**
+
+- Use `debug` for detailed flow information (inputs, intermediate states)
+- Use `info` for significant events (request completed, entity created)
+- Use `warn` for unexpected but handled situations (not found, validation failed)
+- Use `error` for failures that need attention
+- Always include relevant context (userId, entityId, duration)
+- Log at start and end of significant operations
 
 ### Adding Dependencies
 
