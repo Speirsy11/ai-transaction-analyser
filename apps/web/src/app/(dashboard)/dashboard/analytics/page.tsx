@@ -20,6 +20,12 @@ import {
   InsightCard,
 } from "@finance/analytics";
 import { trpc } from "@/trpc/client";
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  BarChart3,
+} from "lucide-react";
 
 export default function AnalyticsPage() {
   const [months, setMonths] = useState(6);
@@ -108,22 +114,16 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Analytics</h2>
-          <p className="text-muted-foreground">
-            Understand your spending patterns over time
-          </p>
-        </div>
+      {/* Header with tabs */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
         <Tabs
           value={months.toString()}
           onValueChange={(v) => setMonths(parseInt(v))}
         >
           <TabsList>
-            <TabsTrigger value="3">3 Months</TabsTrigger>
-            <TabsTrigger value="6">6 Months</TabsTrigger>
-            <TabsTrigger value="12">1 Year</TabsTrigger>
+            <TabsTrigger value="3">3M</TabsTrigger>
+            <TabsTrigger value="6">6M</TabsTrigger>
+            <TabsTrigger value="12">1Y</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -135,30 +135,30 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {/* Charts */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Monthly Overview */}
-        {comparisonQuery.isLoading ? (
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <Skeleton className="h-6 w-40" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[350px] w-full" />
-            </CardContent>
-          </Card>
-        ) : monthlyData.length > 0 ? (
-          <MonthlyOverview data={monthlyData} className="lg:col-span-2" />
-        ) : (
-          <Card className="lg:col-span-2">
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">
-                Not enough data to show monthly comparison
-              </p>
-            </CardContent>
-          </Card>
-        )}
+      {/* Monthly Overview - Full Width */}
+      {comparisonQuery.isLoading ? (
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-40" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[350px] w-full" />
+          </CardContent>
+        </Card>
+      ) : monthlyData.length > 0 ? (
+        <MonthlyOverview data={monthlyData} />
+      ) : (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              Not enough data to show monthly comparison
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
+      {/* Two column layout for detailed charts */}
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Spending Trends */}
         {trendsQuery.isLoading ? (
           <Card>
@@ -221,39 +221,57 @@ export default function AnalyticsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="bg-muted/50 rounded-lg p-4">
-              <p className="text-muted-foreground text-sm">Total Spent</p>
-              <p className="text-2xl font-bold">{formatCurrency(totalSpent)}</p>
+            <div className="flex items-center gap-3 rounded-xl border p-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-500/10">
+                <TrendingDown className="h-5 w-5 text-red-600 dark:text-red-400" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total Spent</p>
+                <p className="text-lg font-bold">{formatCurrency(totalSpent)}</p>
+              </div>
             </div>
-            <div className="bg-muted/50 rounded-lg p-4">
-              <p className="text-muted-foreground text-sm">
-                Avg. Monthly Expenses
-              </p>
-              <p className="text-2xl font-bold">
-                {formatCurrency(avgMonthlySpend)}
-              </p>
+            <div className="flex items-center gap-3 rounded-xl border p-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
+                <BarChart3 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Avg. Monthly</p>
+                <p className="text-lg font-bold">
+                  {formatCurrency(avgMonthlySpend)}
+                </p>
+              </div>
             </div>
-            <div className="bg-muted/50 rounded-lg p-4">
-              <p className="text-muted-foreground text-sm">Total Income</p>
-              <p className="text-2xl font-bold text-green-600">
-                {formatCurrency(
-                  monthlyData.reduce((sum, m) => sum + m.income, 0)
-                )}
-              </p>
+            <div className="flex items-center gap-3 rounded-xl border p-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
+                <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total Income</p>
+                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                  {formatCurrency(
+                    monthlyData.reduce((sum, m) => sum + m.income, 0)
+                  )}
+                </p>
+              </div>
             </div>
-            <div className="bg-muted/50 rounded-lg p-4">
-              <p className="text-muted-foreground text-sm">Net Savings</p>
-              <p
-                className={`text-2xl font-bold ${
-                  monthlyData.reduce((sum, m) => sum + m.savings, 0) >= 0
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {formatCurrency(
-                  monthlyData.reduce((sum, m) => sum + m.savings, 0)
-                )}
-              </p>
+            <div className="flex items-center gap-3 rounded-xl border p-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-500/10">
+                <DollarSign className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Net Savings</p>
+                <p
+                  className={`text-lg font-bold ${
+                    monthlyData.reduce((sum, m) => sum + m.savings, 0) >= 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-red-600 dark:text-red-400"
+                  }`}
+                >
+                  {formatCurrency(
+                    monthlyData.reduce((sum, m) => sum + m.savings, 0)
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         </CardContent>

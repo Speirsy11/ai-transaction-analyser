@@ -15,11 +15,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="bg-muted/30 min-h-screen">
+    <div className="min-h-screen bg-muted/40">
       <DashboardSidebar />
-      <div className="lg:pl-72">
+      <div className="lg:pl-64">
         <DashboardHeader />
-        <main className="p-6">{children}</main>
+        <main className="p-4 pb-20 sm:p-6 lg:pb-6">{children}</main>
       </div>
     </div>
   );

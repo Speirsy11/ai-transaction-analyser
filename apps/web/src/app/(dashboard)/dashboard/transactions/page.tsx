@@ -14,7 +14,14 @@ import {
 } from "@finance/ui";
 import { TransactionTable } from "@finance/transactions";
 import { trpc } from "@/trpc/client";
-import { Search, Download, Plus } from "lucide-react";
+import {
+  Search,
+  Download,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  SlidersHorizontal,
+} from "lucide-react";
 
 export default function TransactionsPage() {
   const [search, setSearch] = useState("");
@@ -43,6 +50,9 @@ export default function TransactionsPage() {
   const total = transactionsQuery.data?.total || 0;
   const hasMore = transactionsQuery.data?.hasMore || false;
 
+  const currentPage = Math.floor(offset / limit) + 1;
+  const totalPages = Math.ceil(total / limit);
+
   const handleNextPage = () => {
     setOffset(offset + limit);
   };
@@ -53,70 +63,58 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Toolbar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Transactions</h2>
-          <p className="text-muted-foreground">
-            View and manage all your transactions
-          </p>
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search transactions..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setOffset(0);
+            }}
+            className="pl-10"
+          />
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Select defaultValue="all">
+            <SelectTrigger className="w-[160px]">
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="housing">Housing</SelectItem>
+              <SelectItem value="transportation">Transportation</SelectItem>
+              <SelectItem value="food">Food & Dining</SelectItem>
+              <SelectItem value="entertainment">Entertainment</SelectItem>
+              <SelectItem value="shopping">Shopping</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select defaultValue="30">
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="90">Last 90 days</SelectItem>
+              <SelectItem value="365">Last year</SelectItem>
+              <SelectItem value="all">All time</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="hidden h-6 w-px bg-border sm:block" />
+          <Button variant="outline" size="sm" className="hidden sm:flex">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
           <Button size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            Add Transaction
+            Add
           </Button>
         </div>
       </div>
-
-      {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-              <Input
-                placeholder="Search transactions..."
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setOffset(0);
-                }}
-                className="pl-10"
-              />
-            </div>
-            <Select defaultValue="all">
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="housing">Housing</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="food">Food & Dining</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
-                <SelectItem value="shopping">Shopping</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select defaultValue="30">
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Time Period" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="7">Last 7 days</SelectItem>
-                <SelectItem value="30">Last 30 days</SelectItem>
-                <SelectItem value="90">Last 90 days</SelectItem>
-                <SelectItem value="365">Last year</SelectItem>
-                <SelectItem value="all">All time</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Transactions Table */}
       <TransactionTable
@@ -143,26 +141,36 @@ export default function TransactionsPage() {
       {/* Pagination */}
       {total > 0 && (
         <div className="flex items-center justify-between">
-          <p className="text-muted-foreground text-sm">
-            Showing {offset + 1} to {Math.min(offset + limit, total)} of {total}{" "}
+          <p className="text-sm text-muted-foreground">
+            Showing{" "}
+            <span className="font-medium text-foreground">
+              {offset + 1}-{Math.min(offset + limit, total)}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium text-foreground">{total}</span>{" "}
             transactions
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
+              className="h-8 w-8"
               onClick={handlePrevPage}
               disabled={offset === 0}
             >
-              Previous
+              <ChevronLeft className="h-4 w-4" />
             </Button>
+            <div className="flex h-8 min-w-[3rem] items-center justify-center rounded-md border bg-background px-2 text-sm font-medium">
+              {currentPage} / {totalPages || 1}
+            </div>
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
+              className="h-8 w-8"
               onClick={handleNextPage}
               disabled={!hasMore}
             >
-              Next
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

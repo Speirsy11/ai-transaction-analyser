@@ -19,6 +19,9 @@ import {
   TrendingUp,
   PiggyBank,
   ArrowRight,
+  ArrowUpRight,
+  ArrowDownRight,
+  Upload,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -53,6 +56,9 @@ export default function DashboardPage() {
   const transactions = transactionsQuery.data?.data || [];
   const trends = trendsQuery.data || [];
 
+  const netCashFlow =
+    (budget?.totalIncome || 0) - (budget?.totalExpenses || 0);
+
   // Generate insights based on data
   const insights = budget
     ? [
@@ -82,89 +88,119 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="relative overflow-hidden">
+          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-emerald-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-            <Wallet className="text-muted-foreground h-4 w-4" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Income
+            </CardTitle>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+              <Wallet className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-8 w-28" />
             ) : (
               <>
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   {formatCurrency(budget?.totalIncome || 0)}
                 </div>
-                <p className="text-muted-foreground text-xs">This month</p>
+                <p className="mt-1 text-xs text-muted-foreground">This month</p>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="relative overflow-hidden">
+          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-red-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Expenses
             </CardTitle>
-            <TrendingDown className="text-muted-foreground h-4 w-4" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/10">
+              <TrendingDown className="h-4 w-4 text-red-600 dark:text-red-400" />
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-8 w-28" />
             ) : (
               <>
-                <div className="text-2xl font-bold text-red-600">
+                <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                   {formatCurrency(budget?.totalExpenses || 0)}
                 </div>
-                <p className="text-muted-foreground text-xs">This month</p>
+                <p className="mt-1 text-xs text-muted-foreground">This month</p>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="relative overflow-hidden">
+          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-blue-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Cash Flow</CardTitle>
-            <TrendingUp className="text-muted-foreground h-4 w-4" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Net Cash Flow
+            </CardTitle>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
+              {netCashFlow >= 0 ? (
+                <ArrowUpRight className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              ) : (
+                <ArrowDownRight className="h-4 w-4 text-red-600 dark:text-red-400" />
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-8 w-28" />
             ) : (
               <>
                 <div
                   className={`text-2xl font-bold ${
-                    (budget?.totalIncome || 0) - (budget?.totalExpenses || 0) >=
-                    0
-                      ? "text-green-600"
-                      : "text-red-600"
+                    netCashFlow >= 0
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-red-600 dark:text-red-400"
                   }`}
                 >
-                  {formatCurrency(
-                    (budget?.totalIncome || 0) - (budget?.totalExpenses || 0)
-                  )}
+                  {netCashFlow >= 0 ? "+" : ""}
+                  {formatCurrency(netCashFlow)}
                 </div>
-                <p className="text-muted-foreground text-xs">This month</p>
+                <p className="mt-1 text-xs text-muted-foreground">This month</p>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="relative overflow-hidden">
+          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-violet-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
-            <PiggyBank className="text-muted-foreground h-4 w-4" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Savings Rate
+            </CardTitle>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
+              <PiggyBank className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-8 w-20" />
             ) : (
               <>
                 <div className="text-2xl font-bold">
                   {(budget?.savingsRate || 0).toFixed(1)}%
                 </div>
-                <p className="text-muted-foreground text-xs">Target: 20%</p>
+                <div className="mt-1 flex items-center gap-1.5">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className="h-full rounded-full bg-violet-500 transition-all duration-500"
+                      style={{
+                        width: `${Math.min(((budget?.savingsRate || 0) / 20) * 100, 100)}%`,
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs text-muted-foreground">of 20%</span>
+                </div>
               </>
             )}
           </CardContent>
@@ -231,7 +267,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/dashboard/transactions"
-            className="text-primary flex items-center gap-1 text-sm font-medium hover:underline"
+            className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
           >
             View All
             <ArrowRight className="h-4 w-4" />
@@ -241,11 +277,11 @@ export default function DashboardPage() {
           {transactionsQuery.isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Skeleton key={i} className="h-20 w-full" />
+                <Skeleton key={i} className="h-16 w-full rounded-lg" />
               ))}
             </div>
           ) : transactions.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {transactions.map((transaction) => (
                 <TransactionCard
                   key={transaction.id}
@@ -257,14 +293,20 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="py-8 text-center">
-              <p className="text-muted-foreground mb-4">
-                No transactions yet. Import your bank statement to get started.
+            <div className="flex flex-col items-center py-12 text-center">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                <Upload className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="mb-1 font-semibold">No transactions yet</h3>
+              <p className="mb-4 max-w-sm text-sm text-muted-foreground">
+                Import your bank statement to get started with automatic
+                categorization and budget tracking.
               </p>
               <Link
                 href="/dashboard/import"
-                className="text-primary hover:underline"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
+                <Upload className="h-4 w-4" />
                 Import Transactions
               </Link>
             </div>
