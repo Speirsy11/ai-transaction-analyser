@@ -11,6 +11,48 @@ import {
 const log = logger.child({ module: "analytics" });
 
 export const analyticsRouter = router({
+  getDateRange: protectedProcedure.query(async ({ ctx }) => {
+    log.debug({ userId: ctx.userId }, "getDateRange: fetching transaction date range");
+
+    const userTransactions = await db.query.transactions.findMany({
+      where: eq(transactions.userId, ctx.userId),
+      orderBy: [desc(transactions.date)],
+    });
+
+    if (userTransactions.length === 0) {
+      const now = new Date();
+      return {
+        hasTransactions: false,
+        earliestDate: now,
+        latestDate: now,
+        suggestedMonth: now.getMonth() + 1,
+        suggestedYear: now.getFullYear(),
+      };
+    }
+
+    const dates = userTransactions.map((t) => new Date(t.date));
+    const earliestDate = new Date(Math.min(...dates.map((d) => d.getTime())));
+    const latestDate = new Date(Math.max(...dates.map((d) => d.getTime())));
+
+    log.debug(
+      {
+        userId: ctx.userId,
+        transactionCount: userTransactions.length,
+        earliestDate,
+        latestDate,
+      },
+      "getDateRange: completed"
+    );
+
+    return {
+      hasTransactions: true,
+      earliestDate,
+      latestDate,
+      suggestedMonth: latestDate.getMonth() + 1,
+      suggestedYear: latestDate.getFullYear(),
+    };
+  }),
+
   get503020: protectedProcedure
     .input(
       z.object({

@@ -15,6 +15,7 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "dependencies": {
+    "@finance/logger": "workspace:*",
     "ai": "catalog:",
     "@ai-sdk/openai": "catalog:",
     "zod": "catalog:"

@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["MOCK_FUNCTIONALITY"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

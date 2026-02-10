@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
   CardTitle,
   Skeleton,
   formatCurrency,
+  Button,
 } from "@finance/ui";
 import { BudgetGauge, InsightCard, SpendingChart } from "@finance/analytics";
 import { TransactionCard } from "@finance/transactions";
@@ -21,13 +22,28 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Upload,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
   const now = new Date();
-  const [month] = useState(now.getMonth() + 1);
-  const [year] = useState(now.getFullYear());
+  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [year, setYear] = useState(now.getFullYear());
+  const [hasAutoDetected, setHasAutoDetected] = useState(false);
+
+  // Auto-detect date range from transactions
+  const dateRangeQuery = trpc.analytics.getDateRange.useQuery();
+
+  // Update to the most recent transaction month when data loads
+  useEffect(() => {
+    if (dateRangeQuery.data?.hasTransactions && !hasAutoDetected) {
+      setMonth(dateRangeQuery.data.suggestedMonth);
+      setYear(dateRangeQuery.data.suggestedYear);
+      setHasAutoDetected(true);
+    }
+  }, [dateRangeQuery.data, hasAutoDetected]);
 
   const thirtyDaysAgo = useMemo(() => {
     const d = new Date();
@@ -36,6 +52,29 @@ export default function DashboardPage() {
     return d;
   }, []);
   const today = useMemo(() => new Date(), []);
+
+  const monthName = new Date(year, month - 1).toLocaleDateString("en-GB", {
+    month: "long",
+    year: "numeric",
+  });
+
+  const handlePrevMonth = () => {
+    if (month === 1) {
+      setMonth(12);
+      setYear(year - 1);
+    } else {
+      setMonth(month - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (month === 12) {
+      setMonth(1);
+      setYear(year + 1);
+    } else {
+      setMonth(month + 1);
+    }
+  };
 
   const budgetQuery = trpc.analytics.get503020.useQuery({ month, year });
   const transactionsQuery = trpc.transactions.list.useQuery({
@@ -86,6 +125,27 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header with Month Navigation */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+          <p className="text-muted-foreground">
+            Your financial overview at a glance
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon" onClick={handlePrevMonth}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="min-w-[150px] text-center font-medium">
+            {monthName}
+          </span>
+          <Button variant="outline" size="icon" onClick={handleNextMonth}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
       {/* Stats Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden">
@@ -106,7 +166,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   {formatCurrency(budget?.totalIncome || 0)}
                 </div>
-                <p className="text-muted-foreground mt-1 text-xs">This month</p>
+                <p className="text-muted-foreground mt-1 text-xs">{monthName}</p>
               </>
             )}
           </CardContent>
@@ -130,7 +190,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                   {formatCurrency(budget?.totalExpenses || 0)}
                 </div>
-                <p className="text-muted-foreground mt-1 text-xs">This month</p>
+                <p className="text-muted-foreground mt-1 text-xs">{monthName}</p>
               </>
             )}
           </CardContent>
@@ -169,7 +229,7 @@ export default function DashboardPage() {
                   {netCashFlow >= 0 ? "+" : ""}
                   {formatCurrency(netCashFlow)}
                 </div>
-                <p className="text-muted-foreground mt-1 text-xs">This month</p>
+                <p className="text-muted-foreground mt-1 text-xs">{monthName}</p>
               </>
             )}
           </CardContent>
@@ -256,7 +316,7 @@ export default function DashboardPage() {
           <SpendingChart
             data={trends}
             title="Daily Spending"
-            description="Your spending over the past month"
+            description={`Your spending in ${monthName}`}
           />
         ) : (
           <Card>
@@ -284,7 +344,7 @@ export default function DashboardPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Recent Transactions</CardTitle>
-            <CardDescription>Your latest financial activity</CardDescription>
+            <CardDescription>Transactions in {monthName}</CardDescription>
           </div>
           <Link
             href="/dashboard/transactions"
