@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import {
-  Card,
-  CardContent,
   Input,
   Button,
   Select,
@@ -65,8 +63,8 @@ export default function TransactionsPage() {
     <div className="space-y-6">
       {/* Toolbar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative max-w-md flex-1">
+          <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
           <Input
             placeholder="Search transactions..."
             value={search}
@@ -104,7 +102,7 @@ export default function TransactionsPage() {
               <SelectItem value="all">All time</SelectItem>
             </SelectContent>
           </Select>
-          <div className="hidden h-6 w-px bg-border sm:block" />
+          <div className="bg-border hidden h-6 w-px sm:block" />
           <Button variant="outline" size="sm" className="hidden sm:flex">
             <Download className="mr-2 h-4 w-4" />
             Export
@@ -141,13 +139,12 @@ export default function TransactionsPage() {
       {/* Pagination */}
       {total > 0 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Showing{" "}
-            <span className="font-medium text-foreground">
+            <span className="text-foreground font-medium">
               {offset + 1}-{Math.min(offset + limit, total)}
             </span>{" "}
-            of{" "}
-            <span className="font-medium text-foreground">{total}</span>{" "}
+            of <span className="text-foreground font-medium">{total}</span>{" "}
             transactions
           </p>
           <div className="flex items-center gap-1">
@@ -160,7 +157,7 @@ export default function TransactionsPage() {
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <div className="flex h-8 min-w-[3rem] items-center justify-center rounded-md border bg-background px-2 text-sm font-medium">
+            <div className="bg-background flex h-8 min-w-[3rem] items-center justify-center rounded-md border px-2 text-sm font-medium">
               {currentPage} / {totalPages || 1}
             </div>
             <Button

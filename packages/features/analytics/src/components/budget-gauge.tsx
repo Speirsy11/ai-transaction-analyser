@@ -3,12 +3,14 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
   cn,
   formatCurrency,
   formatPercent,
 } from "@finance/ui";
+import { Home, ShoppingBag, PiggyBank, type LucideIcon } from "lucide-react";
 import type { BudgetBreakdown } from "../calculations";
 
 interface BudgetGaugeProps {
@@ -17,62 +19,90 @@ interface BudgetGaugeProps {
 }
 
 export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
-  const categories = [
+  const categories: Array<{
+    name: string;
+    data: BudgetBreakdown["needs"];
+    color: string;
+    bgColor: string;
+    textColor: string;
+    icon: LucideIcon;
+  }> = [
     {
       name: "Needs",
       data: breakdown.needs,
       color: "bg-blue-500",
       bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      description: "Housing, utilities, groceries, healthcare",
+      textColor: "text-blue-600 dark:text-blue-400",
+      icon: Home,
     },
     {
       name: "Wants",
       data: breakdown.wants,
-      color: "bg-purple-500",
-      bgColor: "bg-purple-100 dark:bg-purple-900/30",
-      description: "Entertainment, dining out, shopping",
+      color: "bg-violet-500",
+      bgColor: "bg-violet-100 dark:bg-violet-900/30",
+      textColor: "text-violet-600 dark:text-violet-400",
+      icon: ShoppingBag,
     },
     {
       name: "Savings",
       data: breakdown.savings,
-      color: "bg-green-500",
-      bgColor: "bg-green-100 dark:bg-green-900/30",
-      description: "Savings, investments, debt paydown",
+      color: "bg-emerald-500",
+      bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
+      textColor: "text-emerald-600 dark:text-emerald-400",
+      icon: PiggyBank,
     },
   ];
 
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>Smart Budget Goals</span>
-          <span className="text-muted-foreground text-sm font-normal">
-            Savings Rate: {formatPercent(breakdown.savingsRate)}
-          </span>
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>50/30/20 Budget</CardTitle>
+            <CardDescription>Track spending against your goals</CardDescription>
+          </div>
+          <div className="bg-muted/50 flex h-9 items-center rounded-lg border px-3 text-sm font-medium tabular-nums">
+            {formatPercent(breakdown.savingsRate)} saved
+          </div>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-5">
         {categories.map((category) => {
           const progressPercent = Math.min(
-            (category.data.actual / category.data.target) * 100,
+            category.data.target > 0
+              ? (category.data.actual / category.data.target) * 100
+              : 0,
             100
           );
           const isOver = category.data.actual > category.data.target;
+          const Icon = category.icon;
 
           return (
-            <div key={category.name} className="space-y-2">
+            <div key={category.name} className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">{category.name}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {category.description}
-                  </p>
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-lg",
+                      category.bgColor
+                    )}
+                  >
+                    <Icon className={cn("h-4 w-4", category.textColor)} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{category.name}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {formatPercent(category.data.percentage)} of income
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
                   <p
                     className={cn(
-                      "font-semibold tabular-nums",
-                      isOver ? "text-red-500" : "text-foreground"
+                      "text-sm font-semibold tabular-nums",
+                      isOver
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-foreground"
                     )}
                   >
                     {formatCurrency(category.data.actual)}
@@ -84,57 +114,54 @@ export function BudgetGauge({ breakdown, className }: BudgetGaugeProps) {
               </div>
               <div
                 className={cn(
-                  "h-3 overflow-hidden rounded-full",
+                  "h-2.5 overflow-hidden rounded-full",
                   category.bgColor
                 )}
               >
                 <div
                   className={cn(
-                    "h-full rounded-full transition-all duration-500",
+                    "h-full rounded-full transition-all duration-700 ease-out",
                     isOver ? "bg-red-500" : category.color
                   )}
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <div className="flex justify-between text-xs">
-                <span
-                  className={cn(
-                    "font-medium",
-                    category.data.status === "over"
-                      ? "text-red-500"
-                      : category.data.status === "on-track"
-                        ? "text-green-500"
-                        : "text-muted-foreground"
-                  )}
-                >
-                  {category.data.status === "over"
-                    ? `${formatCurrency(category.data.actual - category.data.target)} over`
+              <p
+                className={cn(
+                  "text-xs font-medium",
+                  category.data.status === "over"
+                    ? "text-red-600 dark:text-red-400"
                     : category.data.status === "on-track"
-                      ? "On track"
-                      : `${formatCurrency(category.data.target - category.data.actual)} remaining`}
-                </span>
-                <span className="text-muted-foreground">
-                  {formatPercent(category.data.percentage)} of income
-                </span>
-              </div>
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-muted-foreground"
+                )}
+              >
+                {category.data.status === "over"
+                  ? `${formatCurrency(category.data.actual - category.data.target)} over budget`
+                  : category.data.status === "on-track"
+                    ? "On track"
+                    : `${formatCurrency(category.data.target - category.data.actual)} remaining`}
+              </p>
             </div>
           );
         })}
 
-        <div className="border-t pt-4">
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <p className="text-2xl font-bold text-green-500">
-                {formatCurrency(breakdown.totalIncome)}
-              </p>
-              <p className="text-muted-foreground text-sm">Total Income</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-red-500">
-                {formatCurrency(breakdown.totalExpenses)}
-              </p>
-              <p className="text-muted-foreground text-sm">Total Expenses</p>
-            </div>
+        <div className="grid grid-cols-2 gap-3 border-t pt-4">
+          <div className="rounded-lg bg-emerald-50 p-3 text-center dark:bg-emerald-950/20">
+            <p className="text-lg font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
+              {formatCurrency(breakdown.totalIncome)}
+            </p>
+            <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">
+              Total Income
+            </p>
+          </div>
+          <div className="rounded-lg bg-red-50 p-3 text-center dark:bg-red-950/20">
+            <p className="text-lg font-bold tabular-nums text-red-600 dark:text-red-400">
+              {formatCurrency(breakdown.totalExpenses)}
+            </p>
+            <p className="text-xs text-red-600/70 dark:text-red-400/70">
+              Total Expenses
+            </p>
           </div>
         </div>
       </CardContent>

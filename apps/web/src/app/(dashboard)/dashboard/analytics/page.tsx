@@ -20,12 +20,7 @@ import {
   InsightCard,
 } from "@finance/analytics";
 import { trpc } from "@/trpc/client";
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  BarChart3,
-} from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, BarChart3 } from "lucide-react";
 
 export default function AnalyticsPage() {
   const [months, setMonths] = useState(6);
@@ -226,8 +221,10 @@ export default function AnalyticsPage() {
                 <TrendingDown className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Spent</p>
-                <p className="text-lg font-bold">{formatCurrency(totalSpent)}</p>
+                <p className="text-muted-foreground text-sm">Total Spent</p>
+                <p className="text-lg font-bold">
+                  {formatCurrency(totalSpent)}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl border p-4">
@@ -235,7 +232,7 @@ export default function AnalyticsPage() {
                 <BarChart3 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Avg. Monthly</p>
+                <p className="text-muted-foreground text-sm">Avg. Monthly</p>
                 <p className="text-lg font-bold">
                   {formatCurrency(avgMonthlySpend)}
                 </p>
@@ -246,7 +243,7 @@ export default function AnalyticsPage() {
                 <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Income</p>
+                <p className="text-muted-foreground text-sm">Total Income</p>
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                   {formatCurrency(
                     monthlyData.reduce((sum, m) => sum + m.income, 0)
@@ -259,7 +256,7 @@ export default function AnalyticsPage() {
                 <DollarSign className="h-5 w-5 text-violet-600 dark:text-violet-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Net Savings</p>
+                <p className="text-muted-foreground text-sm">Net Savings</p>
                 <p
                   className={`text-lg font-bold ${
                     monthlyData.reduce((sum, m) => sum + m.savings, 0) >= 0

@@ -48,7 +48,7 @@ export function DashboardHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm">
+      <header className="bg-background/95 sticky top-0 z-30 border-b backdrop-blur-sm">
         <div className="flex h-16 items-center gap-4 px-4 sm:px-6">
           {/* Mobile menu button */}
           <Button
@@ -65,7 +65,7 @@ export function DashboardHeader() {
             <h1 className="truncate text-lg font-semibold tracking-tight">
               {page.title}
             </h1>
-            <p className="hidden truncate text-xs text-muted-foreground sm:block">
+            <p className="text-muted-foreground hidden truncate text-xs sm:block">
               {page.description}
             </p>
           </div>
@@ -75,7 +75,7 @@ export function DashboardHeader() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground h-9 w-9"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               <Sun className="h-[1.15rem] w-[1.15rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -86,14 +86,14 @@ export function DashboardHeader() {
             <Button
               variant="ghost"
               size="icon"
-              className="relative h-9 w-9 text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground relative h-9 w-9"
             >
               <Bell className="h-[1.15rem] w-[1.15rem]" />
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-blue-500" />
               <span className="sr-only">Notifications</span>
             </Button>
 
-            <div className="mx-1.5 h-6 w-px bg-border" />
+            <div className="bg-border mx-1.5 h-6 w-px" />
 
             <UserButton />
           </div>

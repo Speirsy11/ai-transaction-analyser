@@ -16,7 +16,6 @@ import { trpc } from "@/trpc/client";
 import {
   Wallet,
   TrendingDown,
-  TrendingUp,
   PiggyBank,
   ArrowRight,
   ArrowUpRight,
@@ -56,8 +55,7 @@ export default function DashboardPage() {
   const transactions = transactionsQuery.data?.data || [];
   const trends = trendsQuery.data || [];
 
-  const netCashFlow =
-    (budget?.totalIncome || 0) - (budget?.totalExpenses || 0);
+  const netCashFlow = (budget?.totalIncome || 0) - (budget?.totalExpenses || 0);
 
   // Generate insights based on data
   const insights = budget
@@ -90,9 +88,9 @@ export default function DashboardPage() {
       {/* Stats Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-emerald-500/10" />
+          <div className="absolute right-0 top-0 h-24 w-24 -translate-y-4 translate-x-8 rounded-full bg-emerald-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Total Income
             </CardTitle>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
@@ -107,16 +105,16 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   {formatCurrency(budget?.totalIncome || 0)}
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">This month</p>
+                <p className="text-muted-foreground mt-1 text-xs">This month</p>
               </>
             )}
           </CardContent>
         </Card>
 
         <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-red-500/10" />
+          <div className="absolute right-0 top-0 h-24 w-24 -translate-y-4 translate-x-8 rounded-full bg-red-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Total Expenses
             </CardTitle>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/10">
@@ -131,16 +129,16 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                   {formatCurrency(budget?.totalExpenses || 0)}
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">This month</p>
+                <p className="text-muted-foreground mt-1 text-xs">This month</p>
               </>
             )}
           </CardContent>
         </Card>
 
         <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-blue-500/10" />
+          <div className="absolute right-0 top-0 h-24 w-24 -translate-y-4 translate-x-8 rounded-full bg-blue-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Net Cash Flow
             </CardTitle>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
@@ -166,16 +164,16 @@ export default function DashboardPage() {
                   {netCashFlow >= 0 ? "+" : ""}
                   {formatCurrency(netCashFlow)}
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">This month</p>
+                <p className="text-muted-foreground mt-1 text-xs">This month</p>
               </>
             )}
           </CardContent>
         </Card>
 
         <Card className="relative overflow-hidden">
-          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-4 rounded-full bg-violet-500/10" />
+          <div className="absolute right-0 top-0 h-24 w-24 -translate-y-4 translate-x-8 rounded-full bg-violet-500/10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-muted-foreground text-sm font-medium">
               Savings Rate
             </CardTitle>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
@@ -191,7 +189,7 @@ export default function DashboardPage() {
                   {(budget?.savingsRate || 0).toFixed(1)}%
                 </div>
                 <div className="mt-1 flex items-center gap-1.5">
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                  <div className="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
                     <div
                       className="h-full rounded-full bg-violet-500 transition-all duration-500"
                       style={{
@@ -199,7 +197,7 @@ export default function DashboardPage() {
                       }}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground">of 20%</span>
+                  <span className="text-muted-foreground text-xs">of 20%</span>
                 </div>
               </>
             )}
@@ -267,7 +265,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/dashboard/transactions"
-            className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            className="text-primary flex items-center gap-1 text-sm font-medium hover:underline"
           >
             View All
             <ArrowRight className="h-4 w-4" />
@@ -294,17 +292,17 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center py-12 text-center">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                <Upload className="h-6 w-6 text-primary" />
+              <div className="bg-primary/10 mb-4 flex h-14 w-14 items-center justify-center rounded-full">
+                <Upload className="text-primary h-6 w-6" />
               </div>
               <h3 className="mb-1 font-semibold">No transactions yet</h3>
-              <p className="mb-4 max-w-sm text-sm text-muted-foreground">
+              <p className="text-muted-foreground mb-4 max-w-sm text-sm">
                 Import your bank statement to get started with automatic
                 categorization and budget tracking.
               </p>
               <Link
                 href="/dashboard/import"
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
               >
                 <Upload className="h-4 w-4" />
                 Import Transactions

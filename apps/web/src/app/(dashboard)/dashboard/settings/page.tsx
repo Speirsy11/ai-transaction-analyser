@@ -14,26 +14,35 @@ import {
 } from "@finance/ui";
 import { useCurrentUser, UserButton } from "@finance/auth";
 import { useTheme } from "next-themes";
+import {
+  User,
+  Palette,
+  Bell,
+  Database,
+  Download,
+  Trash2,
+  Monitor,
+  Moon,
+} from "lucide-react";
 
 export default function SettingsPage() {
   const { user } = useCurrentUser();
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="max-w-3xl space-y-6">
-      {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-        <p className="text-muted-foreground">
-          Manage your account and preferences
-        </p>
-      </div>
-
+    <div className="mx-auto max-w-3xl space-y-6">
       {/* Profile */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>Your personal information</CardDescription>
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
+              <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <CardTitle>Profile</CardTitle>
+              <CardDescription>Your personal information</CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center gap-4">
@@ -62,7 +71,7 @@ export default function SettingsPage() {
               />
             </div>
           </div>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-xs">
             Profile information is managed through your authentication provider.
             Click on your avatar to update.
           </p>
@@ -72,16 +81,26 @@ export default function SettingsPage() {
       {/* Appearance */}
       <Card>
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>Customize how the app looks</CardDescription>
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
+              <Palette className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+            </div>
+            <div>
+              <CardTitle>Appearance</CardTitle>
+              <CardDescription>Customize how the app looks</CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Dark Mode</Label>
-              <p className="text-muted-foreground text-sm">
-                Toggle between light and dark themes
-              </p>
+        <CardContent className="space-y-1">
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div className="flex items-center gap-3">
+              <Moon className="text-muted-foreground h-4 w-4" />
+              <div>
+                <p className="text-sm font-medium">Dark Mode</p>
+                <p className="text-muted-foreground text-xs">
+                  Toggle between light and dark themes
+                </p>
+              </div>
             </div>
             <Switch
               checked={theme === "dark"}
@@ -90,13 +109,15 @@ export default function SettingsPage() {
               }
             />
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>System Theme</Label>
-              <p className="text-muted-foreground text-sm">
-                Automatically match your system preference
-              </p>
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div className="flex items-center gap-3">
+              <Monitor className="text-muted-foreground h-4 w-4" />
+              <div>
+                <p className="text-sm font-medium">System Theme</p>
+                <p className="text-muted-foreground text-xs">
+                  Automatically match your system preference
+                </p>
+              </div>
             </div>
             <Switch
               checked={theme === "system"}
@@ -111,34 +132,41 @@ export default function SettingsPage() {
       {/* Notifications */}
       <Card>
         <CardHeader>
-          <CardTitle>Notifications</CardTitle>
-          <CardDescription>Configure how you receive updates</CardDescription>
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
+              <Bell className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <CardTitle>Notifications</CardTitle>
+              <CardDescription>
+                Configure how you receive updates
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Budget Alerts</Label>
-              <p className="text-muted-foreground text-sm">
+        <CardContent className="space-y-1">
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div>
+              <p className="text-sm font-medium">Budget Alerts</p>
+              <p className="text-muted-foreground text-xs">
                 Get notified when you&apos;re approaching budget limits
               </p>
             </div>
             <Switch defaultChecked />
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Weekly Summary</Label>
-              <p className="text-muted-foreground text-sm">
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div>
+              <p className="text-sm font-medium">Weekly Summary</p>
+              <p className="text-muted-foreground text-xs">
                 Receive a weekly email with your spending summary
               </p>
             </div>
             <Switch />
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Large Transaction Alerts</Label>
-              <p className="text-muted-foreground text-sm">
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div>
+              <p className="text-sm font-medium">Large Transaction Alerts</p>
+              <p className="text-muted-foreground text-xs">
                 Get notified for transactions over a certain amount
               </p>
             </div>
@@ -147,31 +175,46 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Data */}
+      {/* Data Management */}
       <Card>
         <CardHeader>
-          <CardTitle>Data Management</CardTitle>
-          <CardDescription>Export or delete your data</CardDescription>
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+              <Database className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <CardTitle>Data Management</CardTitle>
+              <CardDescription>Export or delete your data</CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <p className="font-medium">Export Data</p>
-              <p className="text-muted-foreground text-sm">
+        <CardContent className="space-y-1">
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div>
+              <p className="text-sm font-medium">Export Data</p>
+              <p className="text-muted-foreground text-xs">
                 Download all your transactions and settings as a JSON file
               </p>
             </div>
-            <Button variant="outline">Export</Button>
+            <Button variant="outline" size="sm">
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
           </div>
           <Separator />
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <p className="text-destructive font-medium">Delete Account</p>
-              <p className="text-muted-foreground text-sm">
+          <div className="hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
+            <div>
+              <p className="text-destructive text-sm font-medium">
+                Delete Account
+              </p>
+              <p className="text-muted-foreground text-xs">
                 Permanently delete your account and all associated data
               </p>
             </div>
-            <Button variant="destructive">Delete Account</Button>
+            <Button variant="destructive" size="sm">
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
           </div>
         </CardContent>
       </Card>

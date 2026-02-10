@@ -62,19 +62,24 @@ export function DashboardSidebar() {
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col transition-all duration-300",
+          "hidden transition-all duration-300 lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col",
           collapsed ? "lg:w-[72px]" : "lg:w-64"
         )}
       >
-        <div className="flex grow flex-col border-r bg-card">
+        <div className="bg-card flex grow flex-col border-r">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center justify-between border-b px-4">
-            <Link href="/dashboard" className="flex items-center gap-2.5 overflow-hidden">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2.5 overflow-hidden"
+            >
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 shadow-md shadow-blue-600/25">
                 <Smile className="h-5 w-5 text-white" />
               </div>
               {!collapsed && (
-                <span className="text-lg font-bold tracking-tight">BudgetBuddy</span>
+                <span className="text-lg font-bold tracking-tight">
+                  BudgetBuddy
+                </span>
               )}
             </Link>
             <Button
@@ -119,7 +124,7 @@ export function DashboardSidebar() {
                       />
                       {!collapsed && item.name}
                       {isActive && !collapsed && (
-                        <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
+                        <div className="bg-primary ml-auto h-1.5 w-1.5 rounded-full" />
                       )}
                     </Link>
                   </li>
@@ -162,7 +167,7 @@ export function DashboardSidebar() {
       </aside>
 
       {/* Mobile bottom navigation */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-card/95 backdrop-blur-lg lg:hidden">
+      <nav className="bg-card/95 fixed inset-x-0 bottom-0 z-50 border-t backdrop-blur-lg lg:hidden">
         <div className="flex h-16 items-center justify-around px-2">
           {navigation.slice(0, 4).map((item) => {
             const isActive = pathname === item.href;
@@ -172,12 +177,12 @@ export function DashboardSidebar() {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                  isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
-                <item.icon className={cn("h-5 w-5", isActive && "text-primary")} />
+                <item.icon
+                  className={cn("h-5 w-5", isActive && "text-primary")}
+                />
                 <span>{item.name}</span>
               </Link>
             );
@@ -191,7 +196,12 @@ export function DashboardSidebar() {
                 : "text-muted-foreground"
             )}
           >
-            <Settings className={cn("h-5 w-5", pathname === "/dashboard/settings" && "text-primary")} />
+            <Settings
+              className={cn(
+                "h-5 w-5",
+                pathname === "/dashboard/settings" && "text-primary"
+              )}
+            />
             <span>More</span>
           </Link>
         </div>
@@ -213,12 +223,19 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-72 bg-card shadow-2xl">
+      <div className="bg-card fixed inset-y-0 left-0 w-72 shadow-2xl">
         <div className="flex h-16 items-center justify-between border-b px-4">
-          <Link href="/dashboard" className="flex items-center gap-2.5" onClick={onClose}>
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2.5"
+            onClick={onClose}
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
               <Smile className="h-5 w-5 text-white" />
             </div>
@@ -245,7 +262,12 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                         : "text-muted-foreground hover:bg-accent hover:text-foreground"
                     )}
                   >
-                    <item.icon className={cn("h-5 w-5 shrink-0", isActive && "text-primary")} />
+                    <item.icon
+                      className={cn(
+                        "h-5 w-5 shrink-0",
+                        isActive && "text-primary"
+                      )}
+                    />
                     {item.name}
                   </Link>
                 </li>

@@ -14,7 +14,14 @@ import {
 } from "@finance/ui";
 import { BudgetGauge, CategoryBreakdown } from "@finance/analytics";
 import { trpc } from "@/trpc/client";
-import { ChevronLeft, ChevronRight, Settings } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Settings,
+  Home,
+  ShoppingBag,
+  PiggyBank,
+} from "lucide-react";
 
 export default function BudgetPage() {
   const now = new Date();
@@ -64,48 +71,44 @@ export default function BudgetPage() {
     }
   };
 
-  // Income input for future "Set Budget" feature
-  const [_incomeInput, _setIncomeInput] = useState(
-    budget?.totalIncome.toString() || ""
-  );
-
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Navigation Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Budget</h2>
-          <p className="text-muted-foreground">
-            Your buddy helps you track and reach your spending goals
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          {/* Month Navigation */}
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={handlePrevMonth}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="min-w-[150px] text-center font-medium">
-              {monthName}
-            </span>
-            <Button variant="outline" size="icon" onClick={handleNextMonth}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            size="sm"
-            onClick={() => setIsEditing(!isEditing)}
+            size="icon"
+            className="h-9 w-9"
+            onClick={handlePrevMonth}
           >
-            <Settings className="mr-2 h-4 w-4" />
-            {isEditing ? "Cancel" : "Customize"}
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="min-w-[160px] text-center text-lg font-semibold">
+            {monthName}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-9 w-9"
+            onClick={handleNextMonth}
+          >
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
+        <Button
+          variant={isEditing ? "default" : "outline"}
+          size="sm"
+          onClick={() => setIsEditing(!isEditing)}
+        >
+          <Settings className="mr-2 h-4 w-4" />
+          {isEditing ? "Cancel" : "Customize"}
+        </Button>
       </div>
 
       {/* Editing Panel */}
       {isEditing && (
-        <Card>
+        <Card className="border-primary/20 bg-primary/[0.02]">
           <CardHeader>
             <CardTitle>Customize Budget</CardTitle>
             <CardDescription>
@@ -134,7 +137,7 @@ export default function BudgetPage() {
             >
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-2">
-                  <Label htmlFor="income">Monthly Income (£)</Label>
+                  <Label htmlFor="income">Monthly Income</Label>
                   <Input
                     id="income"
                     name="income"
@@ -249,53 +252,53 @@ export default function BudgetPage() {
         )}
       </div>
 
-      {/* Budget Tips */}
-      <Card>
-        <CardHeader>
-          <CardTitle>How Your Buddy Helps You Budget</CardTitle>
-          <CardDescription>
-            BudgetBuddy organizes your spending into three simple categories
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-              <div className="mb-2 text-2xl font-bold text-blue-600">Needs</div>
-              <h4 className="font-semibold text-blue-800 dark:text-blue-200">
-                The Essentials
-              </h4>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                Housing, utilities, groceries, healthcare, and minimum debt
-                payments. Your buddy tracks these automatically.
-              </p>
+      {/* Budget Education */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-50/50 dark:border-blue-900/50 dark:from-blue-950/30 dark:to-blue-950/10">
+          <CardContent className="pt-6">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
+              <Home className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
-              <div className="mb-2 text-2xl font-bold text-purple-600">
-                Wants
-              </div>
-              <h4 className="font-semibold text-purple-800 dark:text-purple-200">
-                The Fun Stuff
-              </h4>
-              <p className="text-sm text-purple-700 dark:text-purple-300">
-                Entertainment, dining out, shopping, and subscriptions. Enjoy
-                life while staying on track!
-              </p>
+            <h4 className="mb-1 text-lg font-bold text-blue-700 dark:text-blue-300">
+              50% Needs
+            </h4>
+            <p className="text-sm text-blue-600/80 dark:text-blue-400/80">
+              Housing, utilities, groceries, healthcare, and minimum debt
+              payments. Your buddy tracks these automatically.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-violet-50/50 dark:border-violet-900/50 dark:from-violet-950/30 dark:to-violet-950/10">
+          <CardContent className="pt-6">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/10">
+              <ShoppingBag className="h-5 w-5 text-violet-600 dark:text-violet-400" />
             </div>
-            <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-              <div className="mb-2 text-2xl font-bold text-green-600">
-                Savings
-              </div>
-              <h4 className="font-semibold text-green-800 dark:text-green-200">
-                Future You
-              </h4>
-              <p className="text-sm text-green-700 dark:text-green-300">
-                Savings, investments, and extra debt payments. Your buddy cheers
-                you on as you build wealth!
-              </p>
+            <h4 className="mb-1 text-lg font-bold text-violet-700 dark:text-violet-300">
+              30% Wants
+            </h4>
+            <p className="text-sm text-violet-600/80 dark:text-violet-400/80">
+              Entertainment, dining out, shopping, and subscriptions. Enjoy life
+              while staying on track!
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-50/50 dark:border-emerald-900/50 dark:from-emerald-950/30 dark:to-emerald-950/10">
+          <CardContent className="pt-6">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
+              <PiggyBank className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            <h4 className="mb-1 text-lg font-bold text-emerald-700 dark:text-emerald-300">
+              20% Savings
+            </h4>
+            <p className="text-sm text-emerald-600/80 dark:text-emerald-400/80">
+              Savings, investments, and extra debt payments. Your buddy cheers
+              you on as you build wealth!
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
