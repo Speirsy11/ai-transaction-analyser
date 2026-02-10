@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -21,6 +21,19 @@ export default function BudgetPage() {
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
   const [isEditing, setIsEditing] = useState(false);
+  const [hasAutoDetected, setHasAutoDetected] = useState(false);
+
+  // Auto-detect date range from transactions
+  const dateRangeQuery = trpc.analytics.getDateRange.useQuery();
+
+  // Update to the most recent transaction month when data loads
+  useEffect(() => {
+    if (dateRangeQuery.data?.hasTransactions && !hasAutoDetected) {
+      setMonth(dateRangeQuery.data.suggestedMonth);
+      setYear(dateRangeQuery.data.suggestedYear);
+      setHasAutoDetected(true);
+    }
+  }, [dateRangeQuery.data, hasAutoDetected]);
 
   const startOfMonth = new Date(year, month - 1, 1);
   const endOfMonth = new Date(year, month, 0, 23, 59, 59);

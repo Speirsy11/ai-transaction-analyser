@@ -13,7 +13,10 @@ const handler = async (req: Request) => {
   // Add CORS headers
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
   response.headers.set("Access-Control-Max-Age", "86400");
 
   return response;

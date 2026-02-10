@@ -6,6 +6,13 @@ import {
   type TransactionInput,
   type ClassificationResult,
 } from "./types";
+import {
+  isMockEnabled,
+  mockAskAI,
+  mockGenerateStructuredOutput,
+  mockStreamText,
+  mockClassifyTransaction,
+} from "./mock";
 
 export async function askAI(
   prompt: string,
@@ -15,6 +22,10 @@ export async function askAI(
     temperature?: number;
   }
 ): Promise<string> {
+  if (isMockEnabled()) {
+    return mockAskAI(prompt);
+  }
+
   const model = getModel(options?.model);
 
   const result = await generateText({
@@ -35,6 +46,10 @@ export async function generateStructuredOutput<T extends z.ZodTypeAny>(
     temperature?: number;
   }
 ): Promise<z.infer<T>> {
+  if (isMockEnabled()) {
+    return mockGenerateStructuredOutput(prompt, schema);
+  }
+
   const model = getModel(options?.model);
 
   const result = await generateObject({
@@ -55,6 +70,10 @@ export function streamText(
     temperature?: number;
   }
 ) {
+  if (isMockEnabled()) {
+    return mockStreamText(prompt);
+  }
+
   const model = getModel(options?.model);
 
   return aiStreamText({
@@ -69,6 +88,10 @@ export function streamText(
 export async function classifyTransaction(
   transaction: TransactionInput
 ): Promise<ClassificationResult> {
+  if (isMockEnabled()) {
+    return mockClassifyTransaction(transaction);
+  }
+
   const prompt = `Analyze this financial transaction and classify it:
 
 Transaction Details:

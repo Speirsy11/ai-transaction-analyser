@@ -42,10 +42,18 @@ export const modelRegistry: Record<ModelId, ModelConfig> = {
   },
 };
 
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy-load OpenAI client to avoid API key validation when mock mode is enabled
+let openaiClient: ReturnType<typeof createOpenAI> | null = null;
+
+function getOpenAIClient() {
+  if (!openaiClient) {
+    openaiClient = createOpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
 
 export function getModel(modelId: ModelId = "gpt-4o-mini") {
-  return openai(modelId);
+  return getOpenAIClient()(modelId);
 }
