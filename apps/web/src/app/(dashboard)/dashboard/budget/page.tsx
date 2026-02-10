@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -29,8 +29,8 @@ export default function BudgetPage() {
   const [year, setYear] = useState(now.getFullYear());
   const [isEditing, setIsEditing] = useState(false);
 
-  const startOfMonth = new Date(year, month - 1, 1);
-  const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+  const startOfMonth = useMemo(() => new Date(year, month - 1, 1), [year, month]);
+  const endOfMonth = useMemo(() => new Date(year, month, 0, 23, 59, 59), [year, month]);
 
   const budgetQuery = trpc.analytics.get503020.useQuery({ month, year });
   const categoryQuery = trpc.analytics.getCategoryBreakdown.useQuery({

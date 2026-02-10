@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -25,9 +25,12 @@ import { TrendingUp, TrendingDown, DollarSign, BarChart3 } from "lucide-react";
 export default function AnalyticsPage() {
   const [months, setMonths] = useState(6);
 
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - months);
+  const { startDate, endDate } = useMemo(() => {
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(start.getMonth() - months);
+    return { startDate: start, endDate: end };
+  }, [months]);
 
   const trendsQuery = trpc.analytics.getSpendingTrends.useQuery({
     startDate,

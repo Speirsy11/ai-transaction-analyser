@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Input,
   Button,
@@ -28,13 +28,13 @@ export default function TransactionsPage() {
   const [limit] = useState(25);
   const [offset, setOffset] = useState(0);
 
-  const periodFilter = (() => {
+  const periodFilter = useMemo(() => {
     if (period === "all") return {};
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - Number(period));
     return { startDate, endDate };
-  })();
+  }, [period]);
 
   const transactionsQuery = trpc.transactions.list.useQuery({
     limit,

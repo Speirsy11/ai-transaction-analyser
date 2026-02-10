@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -29,8 +29,8 @@ export default function DashboardPage() {
   const [month] = useState(now.getMonth() + 1);
   const [year] = useState(now.getFullYear());
 
-  const startOfMonth = new Date(year, month - 1, 1);
-  const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+  const startOfMonth = useMemo(() => new Date(year, month - 1, 1), [year, month]);
+  const endOfMonth = useMemo(() => new Date(year, month, 0, 23, 59, 59), [year, month]);
 
   const budgetQuery = trpc.analytics.get503020.useQuery({ month, year });
   const transactionsQuery = trpc.transactions.list.useQuery({
@@ -41,7 +41,7 @@ export default function DashboardPage() {
     },
   });
   const trendsQuery = trpc.analytics.getSpendingTrends.useQuery({
-    startDate: new Date(year, month - 1, 1),
+    startDate: startOfMonth,
     endDate: endOfMonth,
     groupBy: "day",
   });
@@ -242,13 +242,7 @@ export default function DashboardPage() {
         )}
 
         {/* Spending Trends */}
-        {trends.length > 0 ? (
-          <SpendingChart
-            data={trends}
-            title="Daily Spending"
-            description="Your spending over the past month"
-          />
-        ) : (
+        {trendsQuery.isLoading ? (
           <Card>
             <CardHeader>
               <CardTitle>Daily Spending</CardTitle>
@@ -257,6 +251,12 @@ export default function DashboardPage() {
               <Skeleton className="h-[300px] w-full" />
             </CardContent>
           </Card>
+        ) : (
+          <SpendingChart
+            data={trends}
+            title="Daily Spending"
+            description="Your spending over the past month"
+          />
         )}
       </div>
 
