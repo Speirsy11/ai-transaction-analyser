@@ -19,46 +19,49 @@ import {
   MonthlyOverview,
   InsightCard,
 } from "@finance/analytics";
-import { trpc } from "@/trpc/client";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../../../convex/_generated/api";
 import { TrendingUp, TrendingDown, DollarSign, BarChart3 } from "lucide-react";
 
 export default function AnalyticsPage() {
   const [months, setMonths] = useState(6);
 
   const { startDate, endDate } = useMemo(() => {
-    const end = new Date();
+    const end = Date.now();
     const start = new Date();
     start.setMonth(start.getMonth() - months);
-    return { startDate: start, endDate: end };
+    return { startDate: start.getTime(), endDate: end };
   }, [months]);
 
-  const trendsQuery = trpc.analytics.getSpendingTrends.useQuery({
+  const trends = useQuery(api.analytics.getSpendingTrends, {
     startDate,
     endDate,
     groupBy: months > 3 ? "week" : "day",
   });
 
-  const categoryQuery = trpc.analytics.getCategoryBreakdown.useQuery({
+  const categories = useQuery(api.analytics.getCategoryBreakdown, {
     startDate,
     endDate,
   });
 
-  const comparisonQuery = trpc.analytics.getMonthlyComparison.useQuery({
+  const monthlyData = useQuery(api.analytics.getMonthlyComparison, {
     months,
   });
 
-  const trends = trendsQuery.data || [];
-  const categories = categoryQuery.data || [];
-  const monthlyData = comparisonQuery.data || [];
+  const trendsList = trends ?? [];
+  const categoriesList = categories ?? [];
+  const monthlyList = monthlyData ?? [];
 
-  // Calculate insights
-  const totalSpent = categories.reduce((sum, c) => sum + c.total, 0);
-  const avgMonthlySpend = monthlyData.length
-    ? monthlyData.reduce((sum, m) => sum + m.expenses, 0) / monthlyData.length
+  // Calculate aggregates
+  const totalSpent = categoriesList.reduce((sum, c) => sum + c.total, 0);
+  const totalIncome = monthlyList.reduce((sum, m) => sum + m.income, 0);
+  const totalSavings = monthlyList.reduce((sum, m) => sum + m.savings, 0);
+  const avgMonthlySpend = monthlyList.length
+    ? monthlyList.reduce((sum, m) => sum + m.expenses, 0) / monthlyList.length
     : 0;
 
-  const latestMonth = monthlyData[monthlyData.length - 1];
-  const previousMonth = monthlyData[monthlyData.length - 2];
+  const latestMonth = monthlyList[monthlyList.length - 1];
+  const previousMonth = monthlyList[monthlyList.length - 2];
 
   const spendingChange =
     latestMonth && previousMonth && previousMonth.expenses > 0
@@ -95,12 +98,12 @@ export default function AnalyticsPage() {
       description: `Over the past ${months} months, you've averaged ${formatCurrency(avgMonthlySpend)} per month.`,
       value: formatCurrency(avgMonthlySpend),
     },
-    categories.length > 0
+    categoriesList.length > 0
       ? {
           type: "tip" as const,
           title: "Top Category",
-          description: `"${categories[0].category}" is your biggest expense at ${categories[0].percentage.toFixed(1)}% of total spending.`,
-          value: formatCurrency(categories[0].total),
+          description: `"${categoriesList[0].category}" is your biggest expense at ${categoriesList[0].percentage.toFixed(1)}% of total spending.`,
+          value: formatCurrency(categoriesList[0].total),
         }
       : null,
   ].filter(Boolean) as Array<{
@@ -134,7 +137,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Monthly Overview - Full Width */}
-      {comparisonQuery.isLoading ? (
+      {monthlyData === undefined ? (
         <Card>
           <CardHeader>
             <Skeleton className="h-6 w-40" />
@@ -143,8 +146,8 @@ export default function AnalyticsPage() {
             <Skeleton className="h-[350px] w-full" />
           </CardContent>
         </Card>
-      ) : monthlyData.length > 0 ? (
-        <MonthlyOverview data={monthlyData} />
+      ) : monthlyList.length > 0 ? (
+        <MonthlyOverview data={monthlyList} />
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
@@ -158,7 +161,7 @@ export default function AnalyticsPage() {
       {/* Two column layout for detailed charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Spending Trends */}
-        {trendsQuery.isLoading ? (
+        {trends === undefined ? (
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-32" />
@@ -167,9 +170,9 @@ export default function AnalyticsPage() {
               <Skeleton className="h-[300px] w-full" />
             </CardContent>
           </Card>
-        ) : trends.length > 0 ? (
+        ) : trendsList.length > 0 ? (
           <SpendingChart
-            data={trends}
+            data={trendsList}
             title="Spending Over Time"
             description={`${months > 3 ? "Weekly" : "Daily"} spending trend`}
           />
@@ -184,7 +187,7 @@ export default function AnalyticsPage() {
         )}
 
         {/* Category Breakdown */}
-        {categoryQuery.isLoading ? (
+        {categories === undefined ? (
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-40" />
@@ -193,8 +196,8 @@ export default function AnalyticsPage() {
               <Skeleton className="h-[280px] w-full" />
             </CardContent>
           </Card>
-        ) : categories.length > 0 ? (
-          <CategoryBreakdown data={categories} />
+        ) : categoriesList.length > 0 ? (
+          <CategoryBreakdown data={categoriesList} />
         ) : (
           <Card>
             <CardHeader>
@@ -248,9 +251,7 @@ export default function AnalyticsPage() {
               <div>
                 <p className="text-muted-foreground text-sm">Total Income</p>
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                  {formatCurrency(
-                    monthlyData.reduce((sum, m) => sum + m.income, 0)
-                  )}
+                  {formatCurrency(totalIncome)}
                 </p>
               </div>
             </div>
@@ -262,14 +263,12 @@ export default function AnalyticsPage() {
                 <p className="text-muted-foreground text-sm">Net Savings</p>
                 <p
                   className={`text-lg font-bold ${
-                    monthlyData.reduce((sum, m) => sum + m.savings, 0) >= 0
+                    totalSavings >= 0
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-red-600 dark:text-red-400"
                   }`}
                 >
-                  {formatCurrency(
-                    monthlyData.reduce((sum, m) => sum + m.savings, 0)
-                  )}
+                  {formatCurrency(totalSavings)}
                 </p>
               </div>
             </div>

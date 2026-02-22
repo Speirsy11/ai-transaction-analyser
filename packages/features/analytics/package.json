@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./server": "./src/server.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "build": "tsc",
@@ -16,15 +15,10 @@
     "clean": "rm -rf dist .turbo node_modules"
   },
   "dependencies": {
-    "@finance/db": "workspace:*",
-    "@finance/api": "workspace:*",
-    "@finance/logger": "workspace:*",
     "@finance/ui": "workspace:*",
     "date-fns": "catalog:",
-    "drizzle-orm": "catalog:",
     "lucide-react": "catalog:",
-    "recharts": "catalog:",
-    "zod": "catalog:"
+    "recharts": "catalog:"
   },
   "peerDependencies": {
     "react": "catalog:"

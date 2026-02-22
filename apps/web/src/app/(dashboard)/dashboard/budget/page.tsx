@@ -13,7 +13,8 @@ import {
   Skeleton,
 } from "@finance/ui";
 import { BudgetGauge, CategoryBreakdown } from "@finance/analytics";
-import { trpc } from "@/trpc/client";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../../../../../convex/_generated/api";
 import {
   ChevronLeft,
   ChevronRight,
@@ -31,35 +32,33 @@ export default function BudgetPage() {
   const [hasAutoDetected, setHasAutoDetected] = useState(false);
 
   // Auto-detect date range from transactions
-  const dateRangeQuery = trpc.analytics.getDateRange.useQuery();
+  const dateRange = useQuery(api.analytics.getDateRange);
 
   // Update to the most recent transaction month when data loads
   useEffect(() => {
-    if (dateRangeQuery.data?.hasTransactions && !hasAutoDetected) {
-      setMonth(dateRangeQuery.data.suggestedMonth);
-      setYear(dateRangeQuery.data.suggestedYear);
+    if (dateRange?.hasTransactions && !hasAutoDetected) {
+      setMonth(dateRange.suggestedMonth);
+      setYear(dateRange.suggestedYear);
       setHasAutoDetected(true);
     }
-  }, [dateRangeQuery.data, hasAutoDetected]);
-  
-  const startOfMonth = useMemo(() => new Date(year, month - 1, 1), [year, month]);
-  const endOfMonth = useMemo(() => new Date(year, month, 0, 23, 59, 59), [year, month]);
+  }, [dateRange, hasAutoDetected]);
 
-  const budgetQuery = trpc.analytics.get503020.useQuery({ month, year });
-  const categoryQuery = trpc.analytics.getCategoryBreakdown.useQuery({
+  const startOfMonth = useMemo(
+    () => new Date(year, month - 1, 1).getTime(),
+    [year, month]
+  );
+  const endOfMonth = useMemo(
+    () => new Date(year, month, 0, 23, 59, 59, 999).getTime(),
+    [year, month]
+  );
+
+  const budget = useQuery(api.analytics.get503020, { month, year });
+  const categories = useQuery(api.analytics.getCategoryBreakdown, {
     startDate: startOfMonth,
     endDate: endOfMonth,
   });
 
-  const updateAllocation = trpc.analytics.updateAllocation.useMutation({
-    onSuccess: () => {
-      budgetQuery.refetch();
-      setIsEditing(false);
-    },
-  });
-
-  const budget = budgetQuery.data;
-  const categories = categoryQuery.data || [];
+  const updateAllocation = useMutation(api.analytics.updateAllocation);
 
   // Derive target allocation percentages from budget targets and income
   const savedNeedsPercent =
@@ -97,6 +96,8 @@ export default function BudgetPage() {
       setMonth(month + 1);
     }
   };
+
+  const [isSaving, setIsSaving] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -144,15 +145,15 @@ export default function BudgetPage() {
           </CardHeader>
           <CardContent>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-                const needsPercent =
-                  parseFloat(formData.get("needs") as string) || 50;
-                const wantsPercent =
-                  parseFloat(formData.get("wants") as string) || 30;
-                const savingsPercent =
-                  parseFloat(formData.get("savings") as string) || 20;
+                const rawNeeds = parseFloat(formData.get("needs") as string);
+                const rawWants = parseFloat(formData.get("wants") as string);
+                const rawSavings = parseFloat(formData.get("savings") as string);
+                const needsPercent = Number.isNaN(rawNeeds) ? 50 : rawNeeds;
+                const wantsPercent = Number.isNaN(rawWants) ? 30 : rawWants;
+                const savingsPercent = Number.isNaN(rawSavings) ? 20 : rawSavings;
                 const sum = needsPercent + wantsPercent + savingsPercent;
                 if (sum !== 100) {
                   // eslint-disable-next-line no-alert -- Simple validation feedback for budget form
@@ -161,15 +162,24 @@ export default function BudgetPage() {
                   );
                   return;
                 }
-                updateAllocation.mutate({
-                  month,
-                  year,
-                  totalIncome:
-                    parseFloat(formData.get("income") as string) || 0,
-                  needsPercent,
-                  wantsPercent,
-                  savingsPercent,
-                });
+                setIsSaving(true);
+                try {
+                  await updateAllocation({
+                    month,
+                    year,
+                    totalIncome:
+                      parseFloat(formData.get("income") as string) || 0,
+                    needsPercent,
+                    wantsPercent,
+                    savingsPercent,
+                  });
+                  setIsEditing(false);
+                } catch {
+                  // eslint-disable-next-line no-alert -- Simple error feedback for budget form
+                  window.alert("Failed to save budget allocation. Please try again.");
+                } finally {
+                  setIsSaving(false);
+                }
               }}
               className="space-y-4"
             >
@@ -223,8 +233,8 @@ export default function BudgetPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={updateAllocation.isPending}>
-                  {updateAllocation.isPending ? "Saving..." : "Save Changes"}
+                <Button type="submit" disabled={isSaving}>
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
             </form>
@@ -235,7 +245,7 @@ export default function BudgetPage() {
       {/* Main Content */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Budget Gauge */}
-        {budgetQuery.isLoading ? (
+        {budget === undefined ? (
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-32" />
@@ -265,7 +275,7 @@ export default function BudgetPage() {
         )}
 
         {/* Category Breakdown */}
-        {categoryQuery.isLoading ? (
+        {categories === undefined ? (
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-40" />
