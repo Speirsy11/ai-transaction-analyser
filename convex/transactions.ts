@@ -51,9 +51,7 @@ export const list = query({
       );
     }
     if (args.categoryFilter) {
-      filtered = filtered.filter(
-        (t) => t.aiClassified === args.categoryFilter
-      );
+      filtered = filtered.filter((t) => t.aiClassified === args.categoryFilter);
     }
 
     return { ...results, page: filtered };
@@ -260,7 +258,8 @@ export const getSummary = query({
     const categoryTotals: Record<string, number> = {};
     for (const t of userTransactions) {
       const category = t.aiClassified || "Uncategorized";
-      categoryTotals[category] = (categoryTotals[category] || 0) + Math.abs(t.amount);
+      categoryTotals[category] =
+        (categoryTotals[category] || 0) + Math.abs(t.amount);
     }
 
     return {

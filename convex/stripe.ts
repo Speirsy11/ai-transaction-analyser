@@ -102,29 +102,26 @@ export const handleWebhook = internalAction({
       case "customer.subscription.updated": {
         const subscription = event.data.object;
         // Find the userId from the subscription metadata or existing record
-        const existingByCustomer = await ctx.runMutation(
-          internal.subscriptions.upsert,
-          {
-            stripeSubscriptionId: subscription.id,
-            userId: (subscription.metadata?.userId as string) || "",
-            customerId: subscription.customer as string,
-            status: subscription.status,
-            planId: subscription.metadata?.planId || "pro",
-            priceId: subscription.items.data[0]?.price.id,
-            currentPeriodStart: subscription.current_period_start * 1000,
-            currentPeriodEnd: subscription.current_period_end * 1000,
-            cancelAtPeriodEnd: subscription.cancel_at_period_end,
-            canceledAt: subscription.canceled_at
-              ? subscription.canceled_at * 1000
-              : undefined,
-            trialStart: subscription.trial_start
-              ? subscription.trial_start * 1000
-              : undefined,
-            trialEnd: subscription.trial_end
-              ? subscription.trial_end * 1000
-              : undefined,
-          }
-        );
+        await ctx.runMutation(internal.subscriptions.upsert, {
+          stripeSubscriptionId: subscription.id,
+          userId: (subscription.metadata?.userId as string) || "",
+          customerId: subscription.customer as string,
+          status: subscription.status,
+          planId: subscription.metadata?.planId || "pro",
+          priceId: subscription.items.data[0]?.price.id,
+          currentPeriodStart: subscription.current_period_start * 1000,
+          currentPeriodEnd: subscription.current_period_end * 1000,
+          cancelAtPeriodEnd: subscription.cancel_at_period_end,
+          canceledAt: subscription.canceled_at
+            ? subscription.canceled_at * 1000
+            : undefined,
+          trialStart: subscription.trial_start
+            ? subscription.trial_start * 1000
+            : undefined,
+          trialEnd: subscription.trial_end
+            ? subscription.trial_end * 1000
+            : undefined,
+        });
         break;
       }
 

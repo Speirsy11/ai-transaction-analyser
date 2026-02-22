@@ -150,10 +150,14 @@ export default function BudgetPage() {
                 const formData = new FormData(e.currentTarget);
                 const rawNeeds = parseFloat(formData.get("needs") as string);
                 const rawWants = parseFloat(formData.get("wants") as string);
-                const rawSavings = parseFloat(formData.get("savings") as string);
+                const rawSavings = parseFloat(
+                  formData.get("savings") as string
+                );
                 const needsPercent = Number.isNaN(rawNeeds) ? 50 : rawNeeds;
                 const wantsPercent = Number.isNaN(rawWants) ? 30 : rawWants;
-                const savingsPercent = Number.isNaN(rawSavings) ? 20 : rawSavings;
+                const savingsPercent = Number.isNaN(rawSavings)
+                  ? 20
+                  : rawSavings;
                 const sum = needsPercent + wantsPercent + savingsPercent;
                 if (sum !== 100) {
                   // eslint-disable-next-line no-alert -- Simple validation feedback for budget form
@@ -176,7 +180,9 @@ export default function BudgetPage() {
                   setIsEditing(false);
                 } catch {
                   // eslint-disable-next-line no-alert -- Simple error feedback for budget form
-                  window.alert("Failed to save budget allocation. Please try again.");
+                  window.alert(
+                    "Failed to save budget allocation. Please try again."
+                  );
                 } finally {
                   setIsSaving(false);
                 }

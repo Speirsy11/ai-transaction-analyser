@@ -72,7 +72,8 @@ export const seedSystemCategories = mutation({
       .withIndex("by_system", (q) => q.eq("isSystem", true))
       .first();
 
-    if (existing) return { seeded: false, message: "System categories already exist" };
+    if (existing)
+      return { seeded: false, message: "System categories already exist" };
 
     const systemCategories: Array<{
       name: string;
@@ -89,9 +90,17 @@ export const seedSystemCategories = mutation({
       { name: "Shopping", necessityType: "want", color: "#EC4899" },
       { name: "Personal Care", necessityType: "want", color: "#14B8A6" },
       { name: "Education", necessityType: "need", color: "#0EA5E9" },
-      { name: "Bills & Subscriptions", necessityType: "need", color: "#F97316" },
+      {
+        name: "Bills & Subscriptions",
+        necessityType: "need",
+        color: "#F97316",
+      },
       { name: "Income", necessityType: "savings", color: "#10B981" },
-      { name: "Savings & Investments", necessityType: "savings", color: "#059669" },
+      {
+        name: "Savings & Investments",
+        necessityType: "savings",
+        color: "#059669",
+      },
       { name: "Fees & Interest", necessityType: "need", color: "#DC2626" },
       { name: "Travel", necessityType: "want", color: "#8B5CF6" },
       { name: "Gifts & Donations", necessityType: "want", color: "#D946EF" },

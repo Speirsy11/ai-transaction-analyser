@@ -62,10 +62,17 @@ export const classifyTransaction = action({
 
     const isMock = process.env.MOCK_FUNCTIONALITY === "true";
 
-    let classification: { category: string; necessityType: string; confidence: number };
+    let classification: {
+      category: string;
+      necessityType: string;
+      confidence: number;
+    };
 
     if (isMock) {
-      classification = mockClassify(transaction.description, transaction.amount);
+      classification = mockClassify(
+        transaction.description,
+        transaction.amount
+      );
     } else {
       const prompt = `${CLASSIFICATION_PROMPT}
 
@@ -88,7 +95,11 @@ ${transaction.merchant ? `Merchant: ${transaction.merchant}` : ""}`;
       try {
         classification = JSON.parse(result.text);
       } catch {
-        classification = { category: "Other", necessityType: "want", confidence: 0.5 };
+        classification = {
+          category: "Other",
+          necessityType: "want",
+          confidence: 0.5,
+        };
       }
     }
 
@@ -174,7 +185,7 @@ Return results for each transaction by index.`;
         const parsed = JSON.parse(result.text);
         classifications = parsed.results;
       } catch {
-        classifications = ownedTransactions.map((t, i) => ({
+        classifications = ownedTransactions.map((_t, i) => ({
           index: i,
           category: "Other",
           necessityType: "want",
@@ -206,7 +217,11 @@ function mockClassify(description: string, amount: number) {
   const desc = description.toLowerCase();
 
   if (amount > 0) {
-    return { category: "Income", necessityType: "savings" as const, confidence: 0.9 };
+    return {
+      category: "Income",
+      necessityType: "savings" as const,
+      confidence: 0.9,
+    };
   }
 
   const patterns: Array<{
@@ -214,19 +229,86 @@ function mockClassify(description: string, amount: number) {
     category: string;
     necessityType: "need" | "want" | "savings";
   }> = [
-    { keywords: ["rent", "mortgage", "housing"], category: "Housing", necessityType: "need" },
-    { keywords: ["electric", "gas", "water", "utility"], category: "Housing", necessityType: "need" },
-    { keywords: ["tesco", "sainsbury", "asda", "aldi", "lidl", "grocery", "supermarket"], category: "Food & Groceries", necessityType: "need" },
-    { keywords: ["uber", "bus", "train", "fuel", "petrol", "parking"], category: "Transportation", necessityType: "need" },
-    { keywords: ["restaurant", "mcdonald", "nando", "pizza", "deliveroo", "just eat"], category: "Dining & Restaurants", necessityType: "want" },
-    { keywords: ["netflix", "spotify", "disney", "amazon prime", "cinema"], category: "Entertainment", necessityType: "want" },
-    { keywords: ["amazon", "ebay", "asos", "zara", "primark"], category: "Shopping", necessityType: "want" },
-    { keywords: ["gym", "salon", "barber", "spa"], category: "Personal Care", necessityType: "want" },
-    { keywords: ["doctor", "pharmacy", "dental", "hospital", "nhs"], category: "Healthcare", necessityType: "need" },
-    { keywords: ["phone", "broadband", "internet", "subscription"], category: "Bills & Subscriptions", necessityType: "need" },
-    { keywords: ["savings", "investment", "isa", "pension"], category: "Savings & Investments", necessityType: "savings" },
-    { keywords: ["fee", "interest", "charge", "atm"], category: "Fees & Interest", necessityType: "need" },
-    { keywords: ["flight", "hotel", "airbnb", "booking"], category: "Travel", necessityType: "want" },
+    {
+      keywords: ["rent", "mortgage", "housing"],
+      category: "Housing",
+      necessityType: "need",
+    },
+    {
+      keywords: ["electric", "gas", "water", "utility"],
+      category: "Housing",
+      necessityType: "need",
+    },
+    {
+      keywords: [
+        "tesco",
+        "sainsbury",
+        "asda",
+        "aldi",
+        "lidl",
+        "grocery",
+        "supermarket",
+      ],
+      category: "Food & Groceries",
+      necessityType: "need",
+    },
+    {
+      keywords: ["uber", "bus", "train", "fuel", "petrol", "parking"],
+      category: "Transportation",
+      necessityType: "need",
+    },
+    {
+      keywords: [
+        "restaurant",
+        "mcdonald",
+        "nando",
+        "pizza",
+        "deliveroo",
+        "just eat",
+      ],
+      category: "Dining & Restaurants",
+      necessityType: "want",
+    },
+    {
+      keywords: ["netflix", "spotify", "disney", "amazon prime", "cinema"],
+      category: "Entertainment",
+      necessityType: "want",
+    },
+    {
+      keywords: ["amazon", "ebay", "asos", "zara", "primark"],
+      category: "Shopping",
+      necessityType: "want",
+    },
+    {
+      keywords: ["gym", "salon", "barber", "spa"],
+      category: "Personal Care",
+      necessityType: "want",
+    },
+    {
+      keywords: ["doctor", "pharmacy", "dental", "hospital", "nhs"],
+      category: "Healthcare",
+      necessityType: "need",
+    },
+    {
+      keywords: ["phone", "broadband", "internet", "subscription"],
+      category: "Bills & Subscriptions",
+      necessityType: "need",
+    },
+    {
+      keywords: ["savings", "investment", "isa", "pension"],
+      category: "Savings & Investments",
+      necessityType: "savings",
+    },
+    {
+      keywords: ["fee", "interest", "charge", "atm"],
+      category: "Fees & Interest",
+      necessityType: "need",
+    },
+    {
+      keywords: ["flight", "hotel", "airbnb", "booking"],
+      category: "Travel",
+      necessityType: "want",
+    },
   ];
 
   for (const pattern of patterns) {

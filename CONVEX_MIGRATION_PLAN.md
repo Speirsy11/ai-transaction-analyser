@@ -40,16 +40,16 @@
 
 ### What Changes
 
-| Layer | Current | Target |
-|-------|---------|--------|
-| Database | PostgreSQL + Drizzle ORM | Convex Documents |
-| API | tRPC v11 + React Query | Convex queries/mutations/actions |
-| Real-time | React Query polling (5s stale) | Convex WebSocket subscriptions |
-| Rate Limiting | Redis + in-memory fallback | Convex rate limiter library |
-| File Storage | Server-side parsing | Convex file storage + actions |
-| Webhooks | Next.js API routes | Convex HTTP actions |
-| Infrastructure | Docker (PostgreSQL, Redis) | Convex Cloud (managed) |
-| Auth | Clerk (unchanged) | Clerk (unchanged, new integration path) |
+| Layer          | Current                        | Target                                  |
+| -------------- | ------------------------------ | --------------------------------------- |
+| Database       | PostgreSQL + Drizzle ORM       | Convex Documents                        |
+| API            | tRPC v11 + React Query         | Convex queries/mutations/actions        |
+| Real-time      | React Query polling (5s stale) | Convex WebSocket subscriptions          |
+| Rate Limiting  | Redis + in-memory fallback     | Convex rate limiter library             |
+| File Storage   | Server-side parsing            | Convex file storage + actions           |
+| Webhooks       | Next.js API routes             | Convex HTTP actions                     |
+| Infrastructure | Docker (PostgreSQL, Redis)     | Convex Cloud (managed)                  |
+| Auth           | Clerk (unchanged)              | Clerk (unchanged, new integration path) |
 
 ### What Stays the Same
 
@@ -80,6 +80,7 @@ PostgreSQL
 ```
 
 **Key packages affected:**
+
 - `packages/shared/db/` — Drizzle schema + client (replaced)
 - `packages/shared/api/` — tRPC root builder + rate limiting (replaced)
 - `packages/features/transactions/src/router.ts` — tRPC procedures (rewritten)
@@ -146,7 +147,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
-    clerkId: v.string(),       // Clerk user ID (was `id` primary key)
+    clerkId: v.string(), // Clerk user ID (was `id` primary key)
     email: v.string(),
     firstName: v.optional(v.string()),
     lastName: v.optional(v.string()),
@@ -156,9 +157,9 @@ export default defineSchema({
     .index("by_email", ["email"]),
 
   transactions: defineTable({
-    userId: v.string(),         // Clerk user ID (denormalized)
+    userId: v.string(), // Clerk user ID (denormalized)
     amount: v.float64(),
-    date: v.float64(),          // Unix timestamp (ms)
+    date: v.float64(), // Unix timestamp (ms)
     description: v.string(),
     merchant: v.optional(v.string()),
     categoryId: v.optional(v.id("categories")),
@@ -171,7 +172,7 @@ export default defineSchema({
     .index("by_userId_categoryId", ["userId", "categoryId"]),
 
   categories: defineTable({
-    userId: v.optional(v.string()),  // null for system categories
+    userId: v.optional(v.string()), // null for system categories
     name: v.string(),
     icon: v.optional(v.string()),
     color: v.optional(v.string()),
@@ -190,7 +191,7 @@ export default defineSchema({
     categoryId: v.optional(v.id("categories")),
     name: v.optional(v.string()),
     amount: v.optional(v.float64()),
-    period: v.optional(v.string()),   // 'monthly' | 'weekly' | 'yearly'
+    period: v.optional(v.string()), // 'monthly' | 'weekly' | 'yearly'
     month: v.optional(v.float64()),
     year: v.optional(v.float64()),
   })
@@ -200,9 +201,9 @@ export default defineSchema({
   budgetAllocations: defineTable({
     userId: v.string(),
     totalIncome: v.float64(),
-    needsPercent: v.float64(),    // default 50
-    wantsPercent: v.float64(),    // default 30
-    savingsPercent: v.float64(),  // default 20
+    needsPercent: v.float64(), // default 50
+    wantsPercent: v.float64(), // default 30
+    savingsPercent: v.float64(), // default 20
     month: v.float64(),
     year: v.float64(),
   })
@@ -231,16 +232,16 @@ export default defineSchema({
 
 ### Key Schema Differences
 
-| Concept | Drizzle/PostgreSQL | Convex |
-|---------|-------------------|--------|
-| Primary key | `text` (custom UUID) | `_id` (auto-generated `Id<"table">`) |
-| Foreign keys | Explicit FK constraints | No FK constraints; use `v.id("table")` for type safety |
-| Timestamps | `timestamp` columns | `_creationTime` auto-field + manual `v.float64()` |
-| Enums | pgEnum | `v.union(v.literal(...))` |
-| Indexes | SQL indexes | `defineTable().index()` |
-| Relations | Drizzle `relations()` | Manual joins via queries |
-| NULL | nullable columns | `v.optional()` |
-| Cascading deletes | FK CASCADE | Must implement manually in mutations |
+| Concept           | Drizzle/PostgreSQL      | Convex                                                 |
+| ----------------- | ----------------------- | ------------------------------------------------------ |
+| Primary key       | `text` (custom UUID)    | `_id` (auto-generated `Id<"table">`)                   |
+| Foreign keys      | Explicit FK constraints | No FK constraints; use `v.id("table")` for type safety |
+| Timestamps        | `timestamp` columns     | `_creationTime` auto-field + manual `v.float64()`      |
+| Enums             | pgEnum                  | `v.union(v.literal(...))`                              |
+| Indexes           | SQL indexes             | `defineTable().index()`                                |
+| Relations         | Drizzle `relations()`   | Manual joins via queries                               |
+| NULL              | nullable columns        | `v.optional()`                                         |
+| Cascading deletes | FK CASCADE              | Must implement manually in mutations                   |
 
 ### Migration Notes
 
@@ -285,6 +286,7 @@ export default {
 **Step 2: Set up Clerk JWT template**
 
 In the Clerk Dashboard, create a JWT template named "convex" that includes:
+
 - `sub` (user ID)
 - `email`
 - `name`
@@ -382,20 +384,21 @@ export default http;
 
 Each tRPC procedure maps to a Convex function:
 
-| tRPC Concept | Convex Equivalent |
-|-------------|-------------------|
-| `publicProcedure.query()` | `query({...})` |
-| `protectedProcedure.query()` | `query({...})` + `ctx.auth.getUserIdentity()` |
-| `protectedProcedure.mutation()` | `mutation({...})` |
-| `aiRateLimitedProcedure.mutation()` | `action({...})` + rate limiter |
-| `.input(zodSchema)` | `args: { field: v.string(), ... }` |
-| `TRPCError` | `ConvexError` |
-| React Query `useQuery` | Convex `useQuery` (real-time) |
-| React Query `useMutation` | Convex `useMutation` |
+| tRPC Concept                        | Convex Equivalent                             |
+| ----------------------------------- | --------------------------------------------- |
+| `publicProcedure.query()`           | `query({...})`                                |
+| `protectedProcedure.query()`        | `query({...})` + `ctx.auth.getUserIdentity()` |
+| `protectedProcedure.mutation()`     | `mutation({...})`                             |
+| `aiRateLimitedProcedure.mutation()` | `action({...})` + rate limiter                |
+| `.input(zodSchema)`                 | `args: { field: v.string(), ... }`            |
+| `TRPCError`                         | `ConvexError`                                 |
+| React Query `useQuery`              | Convex `useQuery` (real-time)                 |
+| React Query `useMutation`           | Convex `useMutation`                          |
 
 ### Transactions Router Migration
 
 **Current (`packages/features/transactions/src/router.ts`):**
+
 ```typescript
 // tRPC: list transactions with filters
 list: protectedProcedure
@@ -411,6 +414,7 @@ list: protectedProcedure
 ```
 
 **Target (`convex/transactions.ts`):**
+
 ```typescript
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
@@ -568,7 +572,12 @@ export const getSummary = query({
       .filter((t) => t.amount < 0)
       .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-    return { income, expenses, net: income - expenses, count: transactions.length };
+    return {
+      income,
+      expenses,
+      net: income - expenses,
+      count: transactions.length,
+    };
   },
 });
 ```
@@ -576,6 +585,7 @@ export const getSummary = query({
 ### Analytics Router Migration
 
 **Target (`convex/analytics.ts`):**
+
 ```typescript
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
@@ -624,11 +634,7 @@ export const getSpendingTrends = query({
   args: {
     startDate: v.float64(),
     endDate: v.float64(),
-    groupBy: v.union(
-      v.literal("day"),
-      v.literal("week"),
-      v.literal("month")
-    ),
+    groupBy: v.union(v.literal("day"), v.literal("week"), v.literal("month")),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -690,23 +696,23 @@ export const updateAllocation = mutation({
 
 ### Full Router Mapping
 
-| Current tRPC Procedure | Convex Function | Type |
-|------------------------|-----------------|------|
-| `auth.getMe` | `users.getMe` | query |
-| `transactions.list` | `transactions.list` | query (paginated) |
-| `transactions.getById` | `transactions.getById` | query |
-| `transactions.create` | `transactions.create` | mutation |
-| `transactions.createMany` | `transactions.createMany` | mutation |
-| `transactions.update` | `transactions.update` | mutation |
-| `transactions.delete` | `transactions.remove` | mutation |
-| `transactions.classify` | `transactions.classify` | action (calls OpenAI) |
-| `transactions.getSummary` | `transactions.getSummary` | query |
-| `analytics.getDateRange` | `analytics.getDateRange` | query |
-| `analytics.get503020` | `analytics.get503020` | query |
-| `analytics.getSpendingTrends` | `analytics.getSpendingTrends` | query |
-| `analytics.getCategoryBreakdown` | `analytics.getCategoryBreakdown` | query |
-| `analytics.updateAllocation` | `analytics.updateAllocation` | mutation |
-| `analytics.getMonthlyComparison` | `analytics.getMonthlyComparison` | query |
+| Current tRPC Procedure           | Convex Function                  | Type                  |
+| -------------------------------- | -------------------------------- | --------------------- |
+| `auth.getMe`                     | `users.getMe`                    | query                 |
+| `transactions.list`              | `transactions.list`              | query (paginated)     |
+| `transactions.getById`           | `transactions.getById`           | query                 |
+| `transactions.create`            | `transactions.create`            | mutation              |
+| `transactions.createMany`        | `transactions.createMany`        | mutation              |
+| `transactions.update`            | `transactions.update`            | mutation              |
+| `transactions.delete`            | `transactions.remove`            | mutation              |
+| `transactions.classify`          | `transactions.classify`          | action (calls OpenAI) |
+| `transactions.getSummary`        | `transactions.getSummary`        | query                 |
+| `analytics.getDateRange`         | `analytics.getDateRange`         | query                 |
+| `analytics.get503020`            | `analytics.get503020`            | query                 |
+| `analytics.getSpendingTrends`    | `analytics.getSpendingTrends`    | query                 |
+| `analytics.getCategoryBreakdown` | `analytics.getCategoryBreakdown` | query                 |
+| `analytics.updateAllocation`     | `analytics.updateAllocation`     | mutation              |
+| `analytics.getMonthlyComparison` | `analytics.getMonthlyComparison` | query                 |
 
 ---
 
@@ -715,12 +721,14 @@ export const updateAllocation = mutation({
 ### Replace tRPC Client with Convex Client
 
 **Current (`apps/web/src/trpc/provider.tsx`):**
+
 ```typescript
 // QueryClient + httpBatchLink + SuperJSON transformer
 // All components use: trpc.transactions.list.useQuery(...)
 ```
 
 **Target:**
+
 ```typescript
 // apps/web/src/app/providers.tsx
 "use client";
@@ -748,6 +756,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ### Component Migration Pattern
 
 **Current (tRPC + React Query):**
+
 ```typescript
 "use client";
 import { trpc } from "@/trpc/client";
@@ -762,6 +771,7 @@ function TransactionList() {
 ```
 
 **Target (Convex):**
+
 ```typescript
 "use client";
 import { useQuery, usePaginatedQuery, useMutation } from "convex/react";
@@ -832,10 +842,9 @@ export const classifyTransactions = action({
   },
   handler: async (ctx, args) => {
     // 1. Fetch transactions via internal query
-    const transactions = await ctx.runQuery(
-      internal.transactions.getByIds,
-      { ids: args.transactionIds }
-    );
+    const transactions = await ctx.runQuery(internal.transactions.getByIds, {
+      ids: args.transactionIds,
+    });
 
     // 2. Call OpenAI (reuse existing classifier logic)
     // The classifyWithAI function from packages/features/transactions
@@ -845,7 +854,7 @@ export const classifyTransactions = action({
 
     const result = await generateObject({
       model: openai("gpt-4o-mini"),
-      schema: classificationSchema,  // Existing Zod schema → convert to match
+      schema: classificationSchema, // Existing Zod schema → convert to match
       prompt: buildClassificationPrompt(transactions),
     });
 
@@ -1042,10 +1051,17 @@ const createTx = useMutation(api.transactions.create).withOptimisticUpdate(
   (localStore, args) => {
     const existing = localStore.getQuery(api.transactions.list, {});
     if (existing) {
-      localStore.setQuery(api.transactions.list, {}, {
-        ...existing,
-        page: [{ ...args, _id: "temp", _creationTime: Date.now() }, ...existing.page],
-      });
+      localStore.setQuery(
+        api.transactions.list,
+        {},
+        {
+          ...existing,
+          page: [
+            { ...args, _id: "temp", _creationTime: Date.now() },
+            ...existing.page,
+          ],
+        }
+      );
     }
   }
 );
@@ -1058,6 +1074,7 @@ const createTx = useMutation(api.transactions.create).withOptimisticUpdate(
 ### CSV Import Flow
 
 **Current:**
+
 1. Client-side file selection → PapaParse → preview in browser
 2. Parsed transactions sent to `transactions.createMany` tRPC mutation
 3. Auto-classification via `transactions.classify`
@@ -1138,6 +1155,7 @@ export const classify = action({
 ```
 
 **Benefits over current approach:**
+
 - No Redis infrastructure needed
 - No in-memory fallback complexity
 - Atomic and distributed by default
@@ -1171,7 +1189,10 @@ test("create and list transactions", async () => {
   const t = convexTest(schema);
 
   // Set up authenticated user
-  const asUser = t.withIdentity({ subject: "user_123", email: "test@test.com" });
+  const asUser = t.withIdentity({
+    subject: "user_123",
+    email: "test@test.com",
+  });
 
   // Create a transaction
   await asUser.mutation(api.transactions.create, {
@@ -1263,14 +1284,14 @@ export const migrateTransactions = mutation({
 
 ### Key Transformation Rules
 
-| PostgreSQL | Convex |
-|-----------|--------|
-| UUID primary keys | Auto-generated `_id` |
-| `timestamp` | `number` (ms since epoch) |
+| PostgreSQL              | Convex                          |
+| ----------------------- | ------------------------------- |
+| UUID primary keys       | Auto-generated `_id`            |
+| `timestamp`             | `number` (ms since epoch)       |
 | FK references (text ID) | `v.id("table")` or `v.string()` |
-| `createdAt` | `_creationTime` (automatic) |
-| `NULL` | `undefined` (omit field) |
-| SQL `DEFAULT` | Set in mutation handler |
+| `createdAt`             | `_creationTime` (automatic)     |
+| `NULL`                  | `undefined` (omit field)        |
+| SQL `DEFAULT`           | Set in mutation handler         |
 
 ---
 
@@ -1278,15 +1299,15 @@ export const migrateTransactions = mutation({
 
 ### Package Changes
 
-| Package | Action |
-|---------|--------|
-| `packages/shared/db/` | **Remove** — Replaced by `convex/schema.ts` |
-| `packages/shared/api/` | **Remove** — tRPC + rate limiting replaced by Convex |
-| `packages/features/*/router.ts` | **Remove** — Logic moves to `convex/*.ts` |
+| Package                                        | Action                                                |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| `packages/shared/db/`                          | **Remove** — Replaced by `convex/schema.ts`           |
+| `packages/shared/api/`                         | **Remove** — tRPC + rate limiting replaced by Convex  |
+| `packages/features/*/router.ts`                | **Remove** — Logic moves to `convex/*.ts`             |
 | `packages/features/*/src/` (components, utils) | **Keep** — UI components and pure utilities unchanged |
-| `apps/web/src/trpc/` | **Remove** — Replaced by Convex client |
-| `apps/web/src/server/` | **Remove** — tRPC server setup no longer needed |
-| `apps/web/src/app/api/trpc/` | **Remove** — No API route needed |
+| `apps/web/src/trpc/`                           | **Remove** — Replaced by Convex client                |
+| `apps/web/src/server/`                         | **Remove** — tRPC server setup no longer needed       |
+| `apps/web/src/app/api/trpc/`                   | **Remove** — No API route needed                      |
 
 ### New Dependencies
 
@@ -1295,23 +1316,24 @@ Add to `pnpm-workspace.yaml` catalog:
 ```yaml
 catalog:
   # Convex
-  convex: "^1.17.0"         # Core Convex SDK
-  convex-test: "^0.0.34"    # Testing utilities
-  "@convex-dev/rate-limiter": "^0.1.0"  # Rate limiting component
+  convex: "^1.17.0" # Core Convex SDK
+  convex-test: "^0.0.34" # Testing utilities
+  "@convex-dev/rate-limiter": "^0.1.0" # Rate limiting component
 ```
 
 Remove from catalog:
+
 ```yaml
-  # Remove these
-  drizzle-orm: ...
-  postgres: ...
-  ioredis: ...
-  "@trpc/client": ...
-  "@trpc/react-query": ...
-  "@trpc/server": ...
-  "@tanstack/react-query": ...
-  superjson: ...
-  drizzle-kit: ...
+# Remove these
+drizzle-orm: ...
+postgres: ...
+ioredis: ...
+"@trpc/client": ...
+"@trpc/react-query": ...
+"@trpc/server": ...
+"@tanstack/react-query": ...
+superjson: ...
+drizzle-kit: ...
 ```
 
 ### Turbo Configuration Updates
@@ -1324,9 +1346,9 @@ Remove from catalog:
     // Add:
     "convex:dev": {
       "cache": false,
-      "persistent": true
-    }
-  }
+      "persistent": true,
+    },
+  },
 }
 ```
 
@@ -1339,8 +1361,8 @@ Remove from catalog:
     // Remove: db:generate, db:push, db:studio, db:migrate, infra:up, infra:down
     // Add:
     "convex:dev": "npx convex dev",
-    "convex:deploy": "npx convex deploy"
-  }
+    "convex:deploy": "npx convex deploy",
+  },
 }
 ```
 
@@ -1442,30 +1464,30 @@ Alternatively, extract pure utility functions into a shared location that both C
 
 ### High Risk
 
-| Risk | Mitigation |
-|------|------------|
+| Risk                            | Mitigation                                                                                                                                |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Convex document size limits** | Convex documents have a 1MB limit. Transactions are small (~500 bytes each), so this is not a concern. Bulk operations may need batching. |
-| **Pagination model change** | Current UI uses offset-based pagination; Convex uses cursor-based. UI components need updating. |
-| **Action execution time** | Convex actions have a 10-minute timeout. AI classification of large batches (100+ transactions) should be chunked. |
-| **Vendor lock-in** | Convex is a proprietary backend. Mitigate by keeping business logic in pure functions that don't depend on Convex APIs. |
+| **Pagination model change**     | Current UI uses offset-based pagination; Convex uses cursor-based. UI components need updating.                                           |
+| **Action execution time**       | Convex actions have a 10-minute timeout. AI classification of large batches (100+ transactions) should be chunked.                        |
+| **Vendor lock-in**              | Convex is a proprietary backend. Mitigate by keeping business logic in pure functions that don't depend on Convex APIs.                   |
 
 ### Medium Risk
 
-| Risk | Mitigation |
-|------|------------|
-| **Query performance** | Convex doesn't support arbitrary SQL. Complex analytics queries may need restructuring. Use indexes strategically. |
-| **No SQL aggregations** | `SUM`, `AVG`, `GROUP BY` must be done in JavaScript. For large datasets, consider materialized aggregations. |
-| **Missing `JOIN` support** | Related data (transaction + category) requires multiple queries or denormalization. |
-| **Bundle size** | Convex client adds ~30KB. Remove tRPC + React Query (~50KB) to offset. |
+| Risk                       | Mitigation                                                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Query performance**      | Convex doesn't support arbitrary SQL. Complex analytics queries may need restructuring. Use indexes strategically. |
+| **No SQL aggregations**    | `SUM`, `AVG`, `GROUP BY` must be done in JavaScript. For large datasets, consider materialized aggregations.       |
+| **Missing `JOIN` support** | Related data (transaction + category) requires multiple queries or denormalization.                                |
+| **Bundle size**            | Convex client adds ~30KB. Remove tRPC + React Query (~50KB) to offset.                                             |
 
 ### Low Risk
 
-| Risk | Mitigation |
-|------|------------|
-| **Clerk integration** | Convex has first-class Clerk support. Well-documented. |
-| **Stripe webhooks** | HTTP actions are straightforward. Existing webhook logic transfers directly. |
-| **Testing** | `convex-test` supports Vitest. Pure function tests need zero changes. |
-| **Real-time bugs** | Convex subscriptions are battle-tested. May need UI adjustments for rapid updates. |
+| Risk                  | Mitigation                                                                         |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| **Clerk integration** | Convex has first-class Clerk support. Well-documented.                             |
+| **Stripe webhooks**   | HTTP actions are straightforward. Existing webhook logic transfers directly.       |
+| **Testing**           | `convex-test` supports Vitest. Pure function tests need zero changes.              |
+| **Real-time bugs**    | Convex subscriptions are battle-tested. May need UI adjustments for rapid updates. |
 
 ---
 
@@ -1490,6 +1512,7 @@ If issues are found post-migration:
 ### Point of No Return
 
 The migration is reversible until:
+
 - PostgreSQL data is deleted
 - DNS/webhook URLs are permanently switched to Convex endpoints
 - Old packages are removed from `node_modules`

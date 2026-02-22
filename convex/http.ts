@@ -56,7 +56,9 @@ http.route({
     if (type === "user.created" || type === "user.updated") {
       const email = data.email_addresses?.[0]?.email_address;
       if (!email) {
-        return new Response("Missing email address in webhook payload", { status: 400 });
+        return new Response("Missing email address in webhook payload", {
+          status: 400,
+        });
       }
 
       await ctx.runMutation(internal.users.upsertFromClerk, {

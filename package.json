@@ -30,7 +30,11 @@
     "convex:deploy": "convex deploy"
   },
   "devDependencies": {
+    "@ai-sdk/openai": "catalog:",
+    "ai": "catalog:",
     "convex": "catalog:",
+    "resend": "catalog:",
+    "stripe": "catalog:",
     "@eslint/js": "catalog:",
     "@playwright/test": "catalog:",
     "@testing-library/jest-dom": "catalog:",

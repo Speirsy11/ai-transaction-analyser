@@ -65,7 +65,15 @@ export const get503020 = query({
     const userId = await getUserId(ctx);
 
     const startDate = new Date(args.year, args.month - 1, 1).getTime();
-    const endDate = new Date(args.year, args.month, 0, 23, 59, 59, 999).getTime();
+    const endDate = new Date(
+      args.year,
+      args.month,
+      0,
+      23,
+      59,
+      59,
+      999
+    ).getTime();
 
     const monthTransactions = await ctx.db
       .query("transactions")
@@ -130,9 +138,8 @@ export const get503020 = query({
       return "over" as const;
     };
 
-    const savingsRate = totalIncome > 0
-      ? ((totalIncome - totalExpenses) / totalIncome) * 100
-      : 0;
+    const savingsRate =
+      totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
 
     return {
       totalIncome,
@@ -167,11 +174,7 @@ export const getSpendingTrends = query({
   args: {
     startDate: v.float64(),
     endDate: v.float64(),
-    groupBy: v.union(
-      v.literal("day"),
-      v.literal("week"),
-      v.literal("month")
-    ),
+    groupBy: v.union(v.literal("day"), v.literal("week"), v.literal("month")),
   },
   handler: async (ctx, args) => {
     const userId = await getUserId(ctx);
@@ -217,7 +220,7 @@ export const getSpendingTrends = query({
     return Array.from(groups.entries())
       .map(([date, data]) => ({
         date,
-        total: Math.round(data.total * 100) / 100,
+        amount: Math.round(data.total * 100) / 100,
         count: data.count,
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
@@ -251,7 +254,10 @@ export const getCategoryBreakdown = query({
     const categoryMap = new Map<string, number>();
     for (const t of expenses) {
       const category = t.aiClassified || "Uncategorized";
-      categoryMap.set(category, (categoryMap.get(category) || 0) + Math.abs(t.amount));
+      categoryMap.set(
+        category,
+        (categoryMap.get(category) || 0) + Math.abs(t.amount)
+      );
     }
 
     return Array.from(categoryMap.entries())
@@ -362,7 +368,9 @@ export const getMonthlyComparison = query({
         savings: Math.round((data.income - data.expenses) * 100) / 100,
         savingsRate:
           data.income > 0
-            ? Math.round(((data.income - data.expenses) / data.income) * 10000) / 100
+            ? Math.round(
+                ((data.income - data.expenses) / data.income) * 10000
+              ) / 100
             : 0,
       }))
       .sort((a, b) => a.month.localeCompare(b.month));
