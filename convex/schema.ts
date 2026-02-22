@@ -22,6 +22,7 @@ export default defineSchema({
     necessityScore: v.optional(v.float64()),
     aiClassified: v.optional(v.string()),
     notes: v.optional(v.string()),
+    updatedAt: v.optional(v.float64()), // Unix timestamp (ms), set on update
   })
     .index("by_userId", ["userId"])
     .index("by_userId_date", ["userId", "date"])
@@ -45,8 +46,8 @@ export default defineSchema({
   budgets: defineTable({
     userId: v.string(),
     categoryId: v.optional(v.id("categories")),
-    name: v.optional(v.string()),
-    amount: v.optional(v.float64()),
+    name: v.string(),
+    amount: v.float64(),
     period: v.optional(v.string()),
     month: v.optional(v.float64()),
     year: v.optional(v.float64()),

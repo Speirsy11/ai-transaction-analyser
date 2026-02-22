@@ -74,9 +74,13 @@ export const ensureUser = mutation({
 
     if (existing) return existing._id;
 
+    if (!identity.email) {
+      throw new Error("Missing email in user identity");
+    }
+
     return await ctx.db.insert("users", {
       clerkId: identity.subject,
-      email: identity.email ?? "",
+      email: identity.email,
       firstName: identity.givenName,
       lastName: identity.familyName,
       imageUrl: identity.pictureUrl,

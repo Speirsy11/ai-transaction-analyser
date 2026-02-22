@@ -371,7 +371,7 @@ export default function DashboardPage() {
                     notes: transaction.notes ?? null,
                     userId: transaction.userId,
                     createdAt: new Date(transaction._creationTime),
-                    updatedAt: new Date(transaction._creationTime),
+                    updatedAt: new Date(transaction.updatedAt ?? transaction._creationTime),
                   }}
                 />
               ))}

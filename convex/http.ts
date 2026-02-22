@@ -26,7 +26,7 @@ http.route({
         signature,
       });
       return new Response("OK", { status: 200 });
-    } catch (error) {
+    } catch (_error) {
       return new Response("Webhook processing failed", { status: 500 });
     }
   }),
@@ -54,9 +54,14 @@ http.route({
     };
 
     if (type === "user.created" || type === "user.updated") {
+      const email = data.email_addresses?.[0]?.email_address;
+      if (!email) {
+        return new Response("Missing email address in webhook payload", { status: 400 });
+      }
+
       await ctx.runMutation(internal.users.upsertFromClerk, {
         clerkId: data.id,
-        email: data.email_addresses?.[0]?.email_address ?? "",
+        email,
         firstName: data.first_name ?? undefined,
         lastName: data.last_name ?? undefined,
         imageUrl: data.image_url ?? undefined,

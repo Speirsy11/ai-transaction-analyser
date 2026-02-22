@@ -46,6 +46,8 @@ export const upsert = internalMutation({
 
     if (existing) {
       await ctx.db.patch(existing._id, {
+        userId: args.userId,
+        customerId: args.customerId,
         status: args.status,
         planId: args.planId,
         priceId: args.priceId,

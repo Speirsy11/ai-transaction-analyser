@@ -42,6 +42,17 @@ export const create = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
+    // Check for duplicate category name for this user
+    const existing = await ctx.db
+      .query("categories")
+      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.eq(q.field("name"), args.name))
+      .first();
+
+    if (existing) {
+      throw new Error(`Category "${args.name}" already exists`);
+    }
+
     return await ctx.db.insert("categories", {
       ...args,
       userId: identity.subject,

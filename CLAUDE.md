@@ -33,11 +33,17 @@ packages/features/              # Features (can import shared only)
 ├── analytics/                  # 50/30/20 budgeting, charts
 └── payments/                   # Stripe integration
 
+convex/                           # Convex backend functions
+├── schema.ts                   # Document schema definitions
+├── transactions.ts             # Transaction CRUD queries/mutations
+├── analytics.ts                # 50/30/20 budget analytics queries
+├── ai.ts                       # AI classification actions
+├── stripe.ts                   # Stripe payment actions
+├── email.ts                    # Email notification actions
+└── http.ts                     # HTTP routes (webhooks)
+
 packages/shared/                # Shared (can import shared only)
 ├── ui/                         # Shadcn components
-├── db/                         # Drizzle schema & client
-├── api/                        # tRPC root builder
-├── ai/                         # Vercel AI SDK setup
 ├── email/                      # Resend + React Email templates
 ├── logger/                     # Pino logger (singleton)
 └── config/                     # TypeScript, ESLint configs
@@ -156,12 +162,11 @@ All external dependencies must be defined in `pnpm-workspace.yaml` under the `ca
 
 ### Key Files & Locations
 
-- **Database Schema:** `packages/shared/db/src/schema/`
-- **tRPC Routers:** `packages/features/*/src/router.ts`
+- **Convex Schema:** `convex/schema.ts`
+- **Convex Functions:** `convex/` (queries, mutations, actions)
 - **UI Components:** `packages/shared/ui/src/components/`
 - **Dashboard Pages:** `apps/web/src/app/(dashboard)/dashboard/`
-- **API Routes:** `apps/web/src/app/api/`
-- **Stripe Integration:** `packages/features/payments/src/`
+- **Stripe Integration:** `convex/stripe.ts`
 - **Email Templates:** `packages/shared/email/src/templates/`
 - **E2E Tests:** `e2e/`
 - **CI/CD:** `.github/workflows/ci.yml`
@@ -171,12 +176,12 @@ All external dependencies must be defined in `pnpm-workspace.yaml` under the `ca
 Copy `.env.example` to `.env.local` and fill in:
 
 ```
-# Use pnpm infra:up to start local PostgreSQL and Redis
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/finance
-REDIS_URL=redis://localhost:6379
+NEXT_PUBLIC_CONVEX_URL=https://<your-deployment>.convex.cloud
+CONVEX_DEPLOYMENT=<your-deployment-slug>
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
+CLERK_JWT_ISSUER_DOMAIN=https://<your-clerk-domain>.clerk.accounts.dev
 OPENAI_API_KEY=sk-...
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
@@ -208,15 +213,9 @@ pnpm test:coverage          # Run tests with coverage
 pnpm test:e2e               # Run Playwright tests
 pnpm test:e2e:ui            # Run Playwright with UI mode
 
-# Infrastructure (Docker)
-pnpm infra:up               # Start PostgreSQL and Redis containers
-pnpm infra:down             # Stop all containers
-pnpm infra:debug            # Start with pgAdmin and Redis Commander
-
-# Database
-pnpm db:generate            # Generate Drizzle migrations
-pnpm db:push                # Push schema to database
-pnpm db:studio              # Open Drizzle Studio
+# Convex
+pnpm convex:dev             # Start Convex dev server (syncs schema + functions)
+pnpm convex:deploy          # Deploy Convex to production
 
 # Cleaning
 pnpm clean                  # Clean all build artifacts
@@ -227,7 +226,7 @@ pnpm clean                  # Clean all build artifacts
 ### Completed
 
 - [x] Turborepo monorepo setup with boundaries
-- [x] Shared packages: ui, db, api, ai, config
+- [x] Shared packages: ui, email, logger, config
 - [x] Feature packages: auth, transactions, analytics
 - [x] Web app with dashboard, landing page
 - [x] 50/30/20 budget system
@@ -237,9 +236,11 @@ pnpm clean                  # Clean all build artifacts
 
 ### TODO
 
-- [ ] Set up PostgreSQL database and run migrations (run `pnpm infra:up` then `pnpm db:push`)
+- [ ] Set up Convex project (run `pnpm convex:dev` to initialize)
 
 ### Recently Completed
+
+- [x] Migrate from tRPC/Drizzle/PostgreSQL to Convex backend
 
 - [x] Add Vitest for unit testing (45 tests passing)
 - [x] Implement Stripe payments (checkout, webhooks, subscriptions, plans)
@@ -255,7 +256,6 @@ pnpm clean                  # Clean all build artifacts
 
 - All financial data encrypted at rest
 - Clerk handles authentication securely
-- Input validation with Zod on all endpoints
-- CSRF protection via tRPC
-- Rate limiting on API routes (Redis-backed)
+- Input validation with Convex validators on all endpoints
+- Convex uses signed HTTP requests and JWT-authenticated connections
 - Regular dependency audits

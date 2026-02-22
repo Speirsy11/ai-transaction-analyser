@@ -162,7 +162,7 @@ export default function TransactionsPage() {
           notes: t.notes ?? null,
           userId: t.userId,
           createdAt: new Date(t._creationTime),
-          updatedAt: new Date(t._creationTime),
+          updatedAt: new Date(t.updatedAt ?? t._creationTime),
         }))}
         isLoading={transactions === undefined}
         onClassify={(id) =>

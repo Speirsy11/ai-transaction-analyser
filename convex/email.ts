@@ -3,6 +3,20 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 
+async function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error("RESEND_API_KEY environment variable is not set");
+  const { Resend } = await import("resend");
+  return new Resend(apiKey);
+}
+
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+  }).format(amount);
+}
+
 /**
  * Send a welcome email to a new user.
  */
@@ -12,8 +26,7 @@ export const sendWelcomeEmail = action({
     firstName: v.string(),
   },
   handler: async (_ctx, args) => {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const resend = await getResendClient();
 
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@budgetbuddy.app",
@@ -41,8 +54,7 @@ export const sendBudgetAlertEmail = action({
     budget: v.float64(),
   },
   handler: async (_ctx, args) => {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const resend = await getResendClient();
 
     const percentUsed = ((args.spent / args.budget) * 100).toFixed(0);
 
@@ -54,7 +66,7 @@ export const sendBudgetAlertEmail = action({
         <h1>Budget Alert</h1>
         <p>Hi ${args.firstName},</p>
         <p>Your <strong>${args.category}</strong> spending has reached ${percentUsed}% of your budget.</p>
-        <p>Spent: £${args.spent.toFixed(2)} / Budget: £${args.budget.toFixed(2)}</p>
+        <p>Spent: ${formatCurrency(args.spent)} / Budget: ${formatCurrency(args.budget)}</p>
         <p>Log in to BudgetBuddy to review your spending.</p>
       `,
     });

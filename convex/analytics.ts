@@ -1,12 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-
-// Helper to get the authenticated userId or throw
-async function getUserId(ctx: { auth: { getUserIdentity: () => Promise<{ subject: string } | null> } }) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-  return identity.subject;
-}
+import { getUserId } from "./lib/auth";
 
 /**
  * Get the date range of user's transactions.

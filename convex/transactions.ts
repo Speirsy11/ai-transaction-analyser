@@ -6,13 +6,7 @@ import {
 } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
-
-// Helper to get the authenticated userId or throw
-async function getUserId(ctx: { auth: { getUserIdentity: () => Promise<{ subject: string } | null> } }) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthenticated");
-  return identity.subject;
-}
+import { getUserId } from "./lib/auth";
 
 /**
  * List transactions with pagination and optional filters.
@@ -202,7 +196,7 @@ export const update = mutation({
       throw new Error("Transaction not found");
     }
 
-    const { id, ...updates } = args;
+    const { id: _id, ...updates } = args;
     // Filter out undefined values
     const cleanUpdates: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(updates)) {
@@ -210,6 +204,7 @@ export const update = mutation({
         cleanUpdates[key] = value;
       }
     }
+    cleanUpdates.updatedAt = Date.now();
 
     await ctx.db.patch(args.id, cleanUpdates);
     return await ctx.db.get(args.id);

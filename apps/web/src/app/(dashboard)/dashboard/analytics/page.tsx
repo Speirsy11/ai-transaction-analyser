@@ -52,8 +52,10 @@ export default function AnalyticsPage() {
   const categoriesList = categories ?? [];
   const monthlyList = monthlyData ?? [];
 
-  // Calculate insights
+  // Calculate aggregates
   const totalSpent = categoriesList.reduce((sum, c) => sum + c.total, 0);
+  const totalIncome = monthlyList.reduce((sum, m) => sum + m.income, 0);
+  const totalSavings = monthlyList.reduce((sum, m) => sum + m.savings, 0);
   const avgMonthlySpend = monthlyList.length
     ? monthlyList.reduce((sum, m) => sum + m.expenses, 0) / monthlyList.length
     : 0;
@@ -249,9 +251,7 @@ export default function AnalyticsPage() {
               <div>
                 <p className="text-muted-foreground text-sm">Total Income</p>
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                  {formatCurrency(
-                    monthlyList.reduce((sum, m) => sum + m.income, 0)
-                  )}
+                  {formatCurrency(totalIncome)}
                 </p>
               </div>
             </div>
@@ -263,14 +263,12 @@ export default function AnalyticsPage() {
                 <p className="text-muted-foreground text-sm">Net Savings</p>
                 <p
                   className={`text-lg font-bold ${
-                    monthlyList.reduce((sum, m) => sum + m.savings, 0) >= 0
+                    totalSavings >= 0
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-red-600 dark:text-red-400"
                   }`}
                 >
-                  {formatCurrency(
-                    monthlyList.reduce((sum, m) => sum + m.savings, 0)
-                  )}
+                  {formatCurrency(totalSavings)}
                 </p>
               </div>
             </div>

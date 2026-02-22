@@ -148,12 +148,12 @@ export default function BudgetPage() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-                const needsPercent =
-                  parseFloat(formData.get("needs") as string) || 50;
-                const wantsPercent =
-                  parseFloat(formData.get("wants") as string) || 30;
-                const savingsPercent =
-                  parseFloat(formData.get("savings") as string) || 20;
+                const rawNeeds = parseFloat(formData.get("needs") as string);
+                const rawWants = parseFloat(formData.get("wants") as string);
+                const rawSavings = parseFloat(formData.get("savings") as string);
+                const needsPercent = Number.isNaN(rawNeeds) ? 50 : rawNeeds;
+                const wantsPercent = Number.isNaN(rawWants) ? 30 : rawWants;
+                const savingsPercent = Number.isNaN(rawSavings) ? 20 : rawSavings;
                 const sum = needsPercent + wantsPercent + savingsPercent;
                 if (sum !== 100) {
                   // eslint-disable-next-line no-alert -- Simple validation feedback for budget form
@@ -174,6 +174,9 @@ export default function BudgetPage() {
                     savingsPercent,
                   });
                   setIsEditing(false);
+                } catch {
+                  // eslint-disable-next-line no-alert -- Simple error feedback for budget form
+                  window.alert("Failed to save budget allocation. Please try again.");
                 } finally {
                   setIsSaving(false);
                 }
