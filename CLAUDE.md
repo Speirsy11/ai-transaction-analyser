@@ -8,13 +8,13 @@ AI-powered personal finance dashboard with automatic transaction categorization 
 
 - **Build:** Turborepo (v2.x+) monorepo with strict boundary enforcement
 - **Frontend:** Next.js 15 (App Router), React 19, TypeScript
-- **API:** tRPC v11, React Query, Zod validation
-- **Auth:** Clerk
-- **Database:** PostgreSQL + Drizzle ORM
-- **AI:** Vercel AI SDK with OpenAI
+- **Backend:** Convex (queries, mutations, actions, HTTP routes)
+- **Auth:** Clerk (integrated with Convex)
+- **Database:** Convex document store (replaced PostgreSQL + Drizzle ORM)
+- **AI:** OpenAI via Convex actions (replaced Vercel AI SDK)
 - **Styling:** Tailwind CSS, Shadcn/UI components
-- **Payments:** Stripe
-- **Email:** Resend with React Email templates
+- **Payments:** Stripe (via Convex actions + HTTP webhooks)
+- **Email:** Resend (via Convex actions)
 - **Testing:** Vitest (unit), Playwright (E2E)
 - **CI/CD:** GitHub Actions
 
